@@ -29,7 +29,7 @@ the ~24–35k starting context is Claude Code's own system prompt and tools):
 | Item | ~Tokens |
 |---|---|
 | `~/.claude/CLAUDE.md` | 590 |
-| Descriptions of 8 user skills | 950 |
+| Descriptions of 9 user skills | 1,050 |
 | Descriptions of 12 synced skills (`anthropic-skills:*`, from claude.ai) | 2,220 |
 | Plugins: `claude-md-management` 177, `session-report` 72 | 250 |
 | Project `CLAUDE.md` (per project) | 800–1,300 |
@@ -42,6 +42,7 @@ the ~24–35k starting context is Claude Code's own system prompt and tools):
 | `review-gates` | 470 | Gates 0–2, models |
 | `commit` | 480 | Branches, one thing per commit, message shape |
 | `retro` | 430 (+ scan output) | Monthly review of the setup |
+| `design-review` | ~700 | Read-only design + brand review of a site, findings table |
 | `review` | 2,270 | Full engineering review (Gate 2) |
 | `expert-review-panel` | 1,690 | Only when Sarah asks |
 | `planning` | 2,920 | New project or feature spec |
@@ -81,18 +82,23 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   - walmart `prioritization-working-style` (feedback memory) → `~/.claude/CLAUDE.md`?
   - walmart `working-model-changes` → already in `delegate` / `review-gates`; delete.
 
+## Next
+
+- **Private GitHub remote for `~/.claude`** (repo is local; Sarah creates or approves the
+  remote, Sarah pushes). Convert to a plugin only for a second machine, cloud sessions or
+  sharing — `settings.json` and `CLAUDE.md` stay in the repo either way.
+
 ## Later
 
-- **Git repo for `~/.claude`.** Track `CLAUDE.md`, `PLAN.md`, `skills/` (not `synced/`),
-  `hooks/`, `settings.json`. Ignore `projects/`, `history.jsonl`, `logs/`, `plugins/`,
-  `sessions/`, `cache/`, `backups/` and other runtime folders. Private remote. Convert
-  to a plugin only for a second machine, cloud sessions or sharing (`settings.json` and
-  `CLAUDE.md` stay in the repo either way).
 - **web-kit** from shindig: header, theme toggle, token contract. Plus a `new-site`
   skill and one line in `~/.claude/CLAUDE.md`; install `frontend-design` then.
-- **`design-review`** user skill: one checklist that reads a project's design-system doc.
 - **shindig:** slim its `review` skill to extend `~/.claude/skills/review`.
 - **hookify:** only if many simple text rules are wanted.
+
+## Done
+
+- 2026-09-28 · `~/.claude` is a git repo (allowlist `.gitignore`: setup files only).
+- 2026-09-28 · `design-review` skill, built from the sarahs-corner design and brand reviews.
 
 ## Decisions
 
