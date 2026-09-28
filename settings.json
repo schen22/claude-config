@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet"
+  },
+  "enabledPlugins": {
+    "claude-md-management@claude-plugins-official": true,
+    "session-report@claude-plugins-official": true
+  },
+  "autoMode": {
+    "soft_deny": [
+      "$defaults",
+      "Bash(git push origin main:*) in /Users/sarahchen/Documents/projects/shindig-thingamajig \u2014 CLAUDE.md states main is Sarah's and nothing in this repo may merge to it"
+    ],
+    "environment": [
+      "### Org-wide",
+      "**Organization**: None configured",
+      "**Cloud provider(s)**: None configured",
+      "**Repository visibility**: not queryable here \u2014 assume private per default heuristic (no evidence of public status)",
+      "**Internal sharing / snippet hosting**: None configured \u2014 treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: None configured \u2014 CLAUDE.md states \"No secrets exist. A task that appears to need one has been misread.\"",
+      "**Default / protected branches**: main \u2014 CLAUDE.md: \"main is Sarah's. Netlify deploys it on push. Nothing in this repository may merge to main.\" (protected-branch check not queryable via gh)",
+      "**CI/CD deploy targets**: Netlify, deploying from `main` on push (per CLAUDE.md; free-tier hosting)",
+      "**Network posture**: None configured \u2014 CLAUDE.md: build and page fetch nothing except one embedded Google Form iframe (`https://forms.gle/3fsynXeHFPaYjCmX6`)",
+      "**Source control**: The trusted repo (schen22/shindig, remote origin github.com:schen22/shindig.git) and its remote only \u2014 no additional orgs configured",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: None configured",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: RSVP responses in a private Google Sheet accessible only to Sarah (per CLAUDE.md); nothing on the site may be derived from them",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment",
+      "**Protected deployment namespaces / environments**: None configured \u2014 fall back to the Sensitive remote targets heuristic; note `main` branch is the de facto production deploy trigger via Netlify",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development (static site build for a personal/hobby event invite project)",
+      "**Trusted repo**: /Users/sarahchen/Documents/projects/shindig-thingamajig and its remote origin github.com:schen22/shindig.git \u2014 visibility not confirmed, treat as private by default; confidential material (e.g. RSVP data) is never cleared into it regardless of visibility",
+      "**Org-specific CLIs**: None configured",
+      "No \"routine under <user>/ prefix\" qualifiers found in evidence"
+    ]
+  },
+  "feedbackSurveyState": {
+    "lastShownTime": 1754092764114
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CLAUDE_HOOK_MODE=log python3 -S ~/.claude/hooks/brief-check.py",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|Read|Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CLAUDE_HOOK_MODE=log python3 -S ~/.claude/hooks/helper-guard.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -S ~/.claude/hooks/usage-ledger.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -S ~/.claude/hooks/hook-review.py --session-start",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

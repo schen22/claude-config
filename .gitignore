@@ -1,0 +1,14 @@
+# Allowlist: track only the hand-maintained setup. Everything else in ~/.claude is
+# runtime state (transcripts, history, caches, logs, plugins, backups) and stays out.
+/*
+!/.gitignore
+!/CLAUDE.md
+!/PLAN.md
+!/settings.json
+!/hooks/
+!/skills/
+!/agents/
+/skills/synced/
+*.skill
+__pycache__/
+.DS_Store
