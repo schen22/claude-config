@@ -89,9 +89,9 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   there: shindig-thingamajig (required), schen22.github.io (required; confirm its purpose
   first), sarahs-corner (optional, later).
 
-- **Private GitHub remote for `~/.claude`** (repo is local; Sarah creates or approves the
-  remote, Sarah pushes). Convert to a plugin only for a second machine, cloud sessions or
-  sharing — `settings.json` and `CLAUDE.md` stay in the repo either way.
+- **First push of `~/.claude`** — remote `schen22/claude-config` (private) exists; Sarah
+  pushes: `git -C ~/.claude push -u origin main`. Convert to a plugin only for a second
+  machine, cloud sessions or sharing.
 
 ## Later
 
