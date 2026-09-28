@@ -90,7 +90,8 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   first), sarahs-corner (optional, later).
 
 - **First push of `~/.claude`** — remote `schen22/claude-config` (private) exists; Sarah
-  pushes: `git -C ~/.claude push -u origin main`. Convert to a plugin only for a second
+  pushes: `git -C ~/.claude push -u origin main`. Same for web-kit (`schen22/web-kit`,
+  private): `git -C ~/Documents/projects/web-kit push -u origin main`. Convert to a plugin only for a second
   machine, cloud sessions or sharing.
 
 ## Later
