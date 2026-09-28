@@ -49,6 +49,11 @@ that fits.
   equivalent). If a project lacks them, propose adding them before delegating.
 - No screenshots in helpers. Compare hashes or computed values; the visual call is Sarah's.
 
+## Websites
+
+- New site, header or theme toggle → the `web-kit` skill (`~/Documents/projects/web-kit`).
+  Design or brand review → the `design-review` skill.
+
 ## Commits and reviews
 
 - `commit` and `review-gates` skills hold the defaults. A project skill

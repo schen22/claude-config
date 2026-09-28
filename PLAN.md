@@ -29,7 +29,7 @@ the ~24–35k starting context is Claude Code's own system prompt and tools):
 | Item | ~Tokens |
 |---|---|
 | `~/.claude/CLAUDE.md` | 590 |
-| Descriptions of 9 user skills | 1,050 |
+| Descriptions of 10 user skills | 1,150 |
 | Descriptions of 12 synced skills (`anthropic-skills:*`, from claude.ai) | 2,220 |
 | Plugins: `claude-md-management` 177, `session-report` 72 | 250 |
 | Project `CLAUDE.md` (per project) | 800–1,300 |
@@ -43,6 +43,7 @@ the ~24–35k starting context is Claude Code's own system prompt and tools):
 | `commit` | 480 | Branches, one thing per commit, message shape |
 | `retro` | 430 (+ scan output) | Monthly review of the setup |
 | `design-review` | ~700 | Read-only design + brand review of a site, findings table |
+| `web-kit` | ~600 | New site from the starter; add/update header + theme toggle |
 | `review` | 2,270 | Full engineering review (Gate 2) |
 | `expert-review-panel` | 1,690 | Only when Sarah asks |
 | `planning` | 2,920 | New project or feature spec |
@@ -84,21 +85,27 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 
 ## Next
 
+- **Adopt web-kit** — tasks written into each project's CLAUDE.md; Sarah starts a session
+  there: shindig-thingamajig (required), schen22.github.io (required; confirm its purpose
+  first), sarahs-corner (optional, later).
+
 - **Private GitHub remote for `~/.claude`** (repo is local; Sarah creates or approves the
   remote, Sarah pushes). Convert to a plugin only for a second machine, cloud sessions or
   sharing — `settings.json` and `CLAUDE.md` stay in the repo either way.
 
 ## Later
 
-- **web-kit** from shindig: header, theme toggle, token contract. Plus a `new-site`
-  skill and one line in `~/.claude/CLAUDE.md`; install `frontend-design` then.
-- **shindig:** slim its `review` skill to extend `~/.claude/skills/review`.
 - **hookify:** only if many simple text rules are wanted.
 
 ## Done
 
 - 2026-09-28 · `~/.claude` is a git repo (allowlist `.gitignore`: setup files only).
 - 2026-09-28 · `design-review` skill, built from the sarahs-corner design and brand reviews.
+- 2026-09-28 · web-kit 0.1.0 (`~/Documents/projects/web-kit`, local repo): header, theme
+  toggle, `--wk-*` token contract, starter site, copy-in script, contract tests (8) and a
+  browser check (10). `web-kit` skill covers new site / add / update.
+- 2026-09-28 · shindig's broken project copy of `review` removed (backup kept); its
+  `code-reviewer` now uses the user-level `review` + `.claude/review-bindings.md`.
 
 ## Decisions
 
@@ -121,6 +128,9 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - 2026-09-28 · Removed 4 unused agents and the older `interview-prep` copy
   (`backups/removed-2026-09-28/`).
 - 2026-09-28 · Git repo before plugin. New projects use `PLAN.md`; shindig keeps its scheme.
+- 2026-09-28 · web-kit: neutral `--wk-*` tokens each site maps once (no renames); files
+  copied in with a version stamp, never installed as a dependency; toggle uses a fixed
+  label + `aria-pressed`; one `web-kit` skill instead of a separate `new-site` skill.
 
 ## Lessons
 
@@ -137,3 +147,9 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - Keep process work and project work in separate sessions: the process session edits only
   `~/.claude`, the project session owns the repo. Global skill and hook edits reach running
   sessions immediately, so batch them and tell the project session when one lands.
+- Static checks missed a real layout bug (header overflowed at 375px on a site without a
+  `box-sizing` reset); the browser check caught it. Component work needs a browser check.
+- The common reduced-motion reset (`transition-duration: 0.01ms !important` on `*`) makes
+  every property transition for 0.01ms — measure layout a frame after a resize.
+- A project skill with the same name as a user skill silently overrides it (shindig's
+  stale `review`). Project skills extend under a different name.
