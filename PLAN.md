@@ -89,10 +89,6 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   there: shindig-thingamajig (required), schen22.github.io (required; confirm its purpose
   first), sarahs-corner (optional, later).
 
-- **First push of `~/.claude`** — remote `schen22/claude-config` (private) exists; Sarah
-  pushes: `git -C ~/.claude push -u origin main`. Same for web-kit (`schen22/web-kit`,
-  private): `git -C ~/Documents/projects/web-kit push -u origin main`. Convert to a plugin only for a second
-  machine, cloud sessions or sharing.
 
 ## Later
 
@@ -100,7 +96,9 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 
 ## Done
 
-- 2026-09-28 · `~/.claude` is a git repo (allowlist `.gitignore`: setup files only).
+- 2026-09-28 · `~/.claude` is a git repo (allowlist `.gitignore`: setup files only), pushed
+  to `schen22/claude-config` (private). web-kit pushed to `schen22/web-kit` (private).
+  Convert to a plugin only for a second machine, cloud sessions or sharing.
 - 2026-09-28 · `design-review` skill, built from the sarahs-corner design and brand reviews.
 - 2026-09-28 · web-kit 0.1.0 (`~/Documents/projects/web-kit`, local repo): header, theme
   toggle, `--wk-*` token contract, starter site, copy-in script, contract tests (8) and a
