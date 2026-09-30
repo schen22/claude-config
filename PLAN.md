@@ -40,7 +40,7 @@ the ~24–35k starting context is Claude Code's own system prompt and tools):
 |---|---|---|
 | `delegate` | 750 | Inline vs helper, brief template |
 | `review-gates` | 470 | Gates 0–2, models |
-| `commit` | 480 | Branches, one thing per commit, message shape |
+| `commit` | 700 | Branches, one thing per commit, message shape, peer-session + clean-HEAD gate |
 | `retro` | 430 (+ scan output) | Monthly review of the setup |
 | `design-review` | ~700 | Read-only design + brand review of a site, findings table |
 | `web-kit` | ~600 | New site from the starter; add/update header + theme toggle |
@@ -96,6 +96,8 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 
 ## Done
 
+- 2026-09-30 · `commit` skill: peer-session check before staging; `gate-head.sh` runs
+  the gate on a clean checkout of HEAD (`commit` ~480 → ~700 tokens, chars÷4).
 - 2026-09-28 · `~/.claude` is a git repo (allowlist `.gitignore`: setup files only), pushed
   to `schen22/claude-config` (private). web-kit pushed to `schen22/web-kit` (private).
   Convert to a plugin only for a second machine, cloud sessions or sharing.
@@ -152,3 +154,7 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   every property transition for 0.01ms — measure layout a frame after a resize.
 - A project skill with the same name as a user skill silently overrides it (shindig's
   stale `review`). Project skills extend under a different name.
+- Two sessions edited one working tree (ai-deep-dive, 2026-09-30): files changed under a
+  commit being planned. `commit` now checks `git status` + `ListAgents` before staging.
+- A gate check tightened in one commit failed data that only landed in a later one.
+  `commit` now gates each partial-tree commit on a clean checkout (`gate-head.sh`).

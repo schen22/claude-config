@@ -19,6 +19,9 @@ description: >-
   `git worktree remove <path>` and `git branch -d lane/<name>` (plus any
   `worktree-agent-*` branch). A leftover lane is easy to mistake for unfinished work.
 - `git log --oneline -5` before the first commit — never assume repo state.
+- Before staging: `git status` and `ListAgents`. If a peer session is busy in the same
+  working tree (files change under you), stop and ask Sarah: wait for it to commit, or
+  move it to its own worktree. Never commit around its half-done edits.
 
 ## One commit does one thing
 
@@ -27,6 +30,10 @@ description: >-
 - Shared docs (`PLAN.md`, `CLAUDE.md`, `README.md`, `docs/`) are orchestrator-only.
   Helpers list doc-worthy facts in their report instead.
 - Docs go in their own commit, after the code they describe.
+- Each commit passes the full gate on its own. After committing a partial working tree,
+  run `~/.claude/skills/commit/gate-head.sh` (gate on a clean checkout of HEAD). A check
+  tightened in one commit can fail data that only lands in a later one — order commits so
+  each passes.
 - Plan the commit stack before the first commit. > ~6 commits → split across helpers or
   sessions (see `delegate`).
 
@@ -50,7 +57,8 @@ Review: <SHIP|BLOCKED> — <one clause per finding and how it was handled>.
 ## Checklist
 
 ```text
-[ ] right branch; nothing pushed
+[ ] right branch; nothing pushed; no peer session busy in this tree
+[ ] partial tree committed → gate-head.sh passed
 [ ] one item per commit; its test in the same commit
 [ ] helpers: no shared-doc edits
 [ ] subject imperative, <= 60 chars, no "and"
