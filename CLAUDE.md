@@ -61,3 +61,13 @@ that fits.
 
 - `commit` and `review-gates` skills hold the defaults. A project skill
   (`commit-workflow`, `review-workflow`) extends them with project checks and wins on conflict.
+
+## Sharing and privacy
+
+- Before a repo goes public or images leave the machine, look at **every** image and
+  **every** GIF frame (one `ffmpeg … tile` contact sheet per GIF; Read shows only frame 1).
+  Check the content (names, emails, phone numbers, chat titles, health data) and the
+  metadata (EXIF/XMP: GPS, device, timestamps).
+- A force-push leaves old commits reachable on GitHub by SHA. To purge personal data from a
+  new repo, delete and recreate it (`gh auth refresh -s delete_repo`), then check the old SHA 404s.
+- Build ffmpeg filter strings in Python, not zsh: `$5:c` in a zsh string is a modifier.

@@ -161,3 +161,6 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - An edit left in Sarah's dirty working tree got swept into her next commit (ai-deep-dive
   `d211c8f`, 2026-09-30). `~/.claude/CLAUDE.md` § Subagents: with her edits uncommitted, edit
   in a separate worktree from the start, then cherry-pick.
+- A phone number sat in frames 30–47 of a GIF that Read previewed as frame 1 only (ai-deep-dive,
+  2026-09-30). `~/.claude/CLAUDE.md` § Sharing and privacy: check every image and GIF frame plus
+  metadata before sharing; delete + recreate a repo to purge history.
