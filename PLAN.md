@@ -82,6 +82,8 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - First retro **2026-10-28**. Known candidates from the first scan:
   - walmart `prioritization-working-style` (feedback memory) → `~/.claude/CLAUDE.md`?
   - walmart `working-model-changes` → already in `delegate` / `review-gates`; delete.
+  - Weigh each rule added to `CLAUDE.md` / skills: cost (tokens, time, friction) vs. risk.
+    Demote heavy, low-priority checks or drop them (e.g. the every-image check, removed 2026-09-30).
 
 ## Next
 
@@ -132,6 +134,9 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - 2026-09-28 · web-kit: neutral `--wk-*` tokens each site maps once (no renames); files
   copied in with a version stamp, never installed as a dependency; toggle uses a fixed
   label + `aria-pressed`; one `web-kit` skill instead of a separate `new-site` skill.
+- 2026-09-30 · Dropped the every-image / GIF-frame / EXIF check from `~/.claude/CLAUDE.md`
+  § Sharing and privacy: too heavy for routine sharing (Sarah). Force-push and ffmpeg bullets
+  kept. The phone-number lesson below stays as history.
 
 ## Lessons
 
