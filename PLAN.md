@@ -28,7 +28,7 @@ the ~24–35k starting context is Claude Code's own system prompt and tools):
 
 | Item | ~Tokens |
 |---|---|
-| `~/.claude/CLAUDE.md` | 590 |
+| `~/.claude/CLAUDE.md` | 730 |
 | Descriptions of 10 user skills | 1,150 |
 | Descriptions of 12 synced skills (`anthropic-skills:*`, from claude.ai) | 2,220 |
 | Plugins: `claude-md-management` 177, `session-report` 72 | 250 |
@@ -158,3 +158,6 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   commit being planned. `commit` now checks `git status` + `ListAgents` before staging.
 - A gate check tightened in one commit failed data that only landed in a later one.
   `commit` now gates each partial-tree commit on a clean checkout (`gate-head.sh`).
+- An edit left in Sarah's dirty working tree got swept into her next commit (ai-deep-dive
+  `d211c8f`, 2026-09-30). `~/.claude/CLAUDE.md` § Subagents: with her edits uncommitted, edit
+  in a separate worktree from the start, then cherry-pick.

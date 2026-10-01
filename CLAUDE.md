@@ -41,6 +41,9 @@ that fits.
 - Models: `CLAUDE_CODE_SUBAGENT_MODEL=sonnet` is the default. Pass `model` explicitly
   anyway; `haiku` only for mechanical edits with no judgment.
 - Never two sessions editing one working tree. Helpers work in their own worktree.
+- Sarah has uncommitted edits → make every edit in a separate worktree from the start
+  (`git worktree add --detach <scratch> HEAD`), then cherry-pick. An edit left in her tree
+  can end up in her next commit.
 
 ## Gates
 
