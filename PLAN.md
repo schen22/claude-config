@@ -169,3 +169,6 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - A phone number sat in frames 30–47 of a GIF that Read previewed as frame 1 only (ai-deep-dive,
   2026-09-30). `~/.claude/CLAUDE.md` § Sharing and privacy: check every image and GIF frame plus
   metadata before sharing; delete + recreate a repo to purge history.
+- `git stash` is one list for every worktree: the orchestrator's pop took a helper's stashed
+  CSS edit (sarahs-corner, 2026-10-03). `delegate` brief Gate + "While it runs": no stash;
+  use `git diff > patch` / `git checkout` / `git apply`.

@@ -46,6 +46,8 @@ code to change. Aim ≤ ~3k tokens. No "read CLAUDE.md" / "read docs/…".>
 - Before each commit: <full gate, e.g. npm run gate>
 - Never run raw test commands or paste logs; the gate scripts filter output.
 - Prove "fails before" with the single test (name filter), never the full suite.
+- Never `git stash`: every worktree shares one stash list. For "fails before":
+  `git diff <file> > <scratch>.patch`, `git checkout <file>`, test, `git apply` it back.
 - Cap any other output (`| head -c 4000`). Never print generated files (builds, lockfiles).
 - No screenshots. Verify visuals by hash or computed values; the visual call is Sarah's.
 - Commit on lane/<name> in your worktree. Never push, never merge.
@@ -59,6 +61,8 @@ Pass `model: "sonnet"` (or `"haiku"` for purely mechanical edits).
 
 ## While it runs
 
+- No `git stash` in your own tree either while a helper's worktree exists — a pop can
+  take the helper's entry.
 - A helper past ~150k tokens: `SendMessage` it to commit what's green, report, and stop.
   Re-brief the rest as a new, smaller lane — a fresh brief is cheaper than every further
   step at 150k+.
