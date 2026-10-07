@@ -55,8 +55,8 @@ the ~24–35k starting context is Claude Code's own system prompt and tools):
 
 | Hook | Event | Mode | What |
 |---|---|---|---|
-| `brief-check.py` | PreToolUse `Agent` | log | Helper brief follows the `delegate` template; opus/fable needs a reason |
-| `helper-guard.py` | PreToolUse Bash/Read/Edit/Write/NotebookEdit, subagents only | log | 150k budget → wrap up; raw test runs → gate; no images |
+| `brief-check.py` | PreToolUse `Agent` | enforce | Helper brief follows the `delegate` template; opus/fable needs a reason |
+| `helper-guard.py` | PreToolUse Bash/Read/Edit/Write/NotebookEdit, subagents only | enforce | 150k budget → wrap up; raw test runs → gate; no images |
 | `usage-ledger.py` | SubagentStop | always on | One row per helper in `logs/agents.jsonl` |
 | `hook-review.py` | SessionStart | always on | From the date in `hooks/REVIEW_DUE`, asks for the hook review each session until done |
 
@@ -68,7 +68,6 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 | Task | Sarah | Claude | When |
 |---|---|---|---|
 | Approve plans, commits, deletions, installs | Decides | Proposes | Always |
-| Hook trial: log → enforce | Decides | Runs `hook-review.py`, proposes per hook | 2026-10-05 (reminder is automatic) |
 | Retro | Asks for it, approves | Runs `retro`, proposes, applies, updates this file | Monthly |
 | End-of-session lessons | Approves | Sorts with the ladder | Every session |
 | After editing a hook | — | Runs `test_hooks.py` | On change |
@@ -78,7 +77,6 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 
 ## Now
 
-- Hook trial in log-only mode until **2026-10-05**, then review.
 - First retro **2026-10-28**. Known candidates from the first scan:
   - walmart `prioritization-working-style` (feedback memory) → `~/.claude/CLAUDE.md`?
   - walmart `working-model-changes` → already in `delegate` / `review-gates`; delete.
@@ -137,6 +135,10 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - 2026-09-30 · Dropped the every-image / GIF-frame / EXIF check from `~/.claude/CLAUDE.md`
   § Sharing and privacy: too heavy for routine sharing (Sarah). Force-push and ffmpeg bullets
   kept. The phone-number lesson below stays as history.
+
+- 2026-10-07 · Hook trial reviewed (48 decisions, 2026-09-28 → 10-05): `brief-check` and
+  `helper-guard` switched to enforce, unchanged. 24 image/screenshot and 19 incomplete-brief
+  calls would have been denied.
 
 ## Lessons
 
