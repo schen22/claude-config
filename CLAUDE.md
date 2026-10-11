@@ -10,7 +10,8 @@ A project's own `CLAUDE.md` wins where it is more specific.
 - **Verify before claiming.** Check current behaviour (build, run, read) before describing it.
 - **Terse.** Tables, diffs, short bullets.
 - **Hyperlink doc references.** Every mention of another doc, in files and in replies, is a
-  Markdown link (to the section anchor when there is one).
+  Markdown link (to the section anchor when there is one). Never a bare ID: write the name first,
+  the ID in parentheses, linked to its definition, e.g. [Repeated context (C2)](…#context).
 
 ## State
 

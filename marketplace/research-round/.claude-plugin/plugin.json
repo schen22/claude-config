@@ -1,6 +1,6 @@
 {
   "name": "research-round",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "One research round on a question, as a build round (a product or feature) or a strategy round (a 12-month market strategy): up to 3 role agents research in parallel, a fact-checker per report verifies claims and recomputes numbers, an overseer applies the checklists and sends fixes back once, and an Opus synthesis writes proposals/<slug>.md scored against the goals.",
   "author": {
     "name": "Sarah Chen"

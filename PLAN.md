@@ -220,6 +220,9 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - 2026-10-10 · Reverted brief-check and helper-guard to log mode (Sarah): enforce mode is
   untested with research-round's agents (up to 11 per round, Opus synthesis); wibey-case deadline
   Wed. Re-enable after a round runs clean with them logging.
+- 2026-10-10 · Never a bare ID in docs or replies: name first, ID in parentheses, linked (Sarah,
+  wibey-case). Added to `~/.claude/CLAUDE.md` § How we work and research-round 0.5.2 (report
+  rule 6, checklist 3, synthesizer).
 
 ## Lessons
 

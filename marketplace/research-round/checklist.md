@@ -8,7 +8,7 @@ write, not "improve X". Cross-report consistency is checked across all reports.
 |---|---|
 | 1 | Does it open with a **TL;DR** that gives the answer, not the background? |
 | 2 | Is there a **Terms** table, with every abbreviation and term of art defined? |
-| 3 | Is every cross-reference to a project file, section or question a **relative link**? |
+| 3 | Is every cross-reference to a project file, section or question a **relative link**, and is every ID written as **name (ID)** with a link to its definition (no bare IDs such as "C2" or "G1")? |
 | 4 | Does every claim have a **source and a confidence level**? Are the fact-checker's "unverified" marks kept, not hidden? Were the numbers recomputed (see the fact-check notes)? |
 | 5 | Are options compared on **advantages mapped to the goals (by ID), gaps, cost and maintenance**, with a stated reason for the pick? |
 | 6 | Does every estimate **list its assumptions**? |
