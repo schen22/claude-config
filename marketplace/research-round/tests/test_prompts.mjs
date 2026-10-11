@@ -15,7 +15,7 @@ let sent = {}
 const agent = async (prompt, o) => {
   sent[o.label] = prompt
   if (o.agentType.endsWith('fact-checker')) return { checked: 3, confirmed: 2, corrected: [{ claim: 'c', fix: 'f' }], unverified: [], numbersRecomputed: 1 }
-  if (o.agentType.endsWith('overseer')) return { reports: [{ role: 'ux-researcher', pass: false, fixes: [{ item: 7, fix: 'rate as a ÷ b' }] }, { role: 'data-scientist', pass: true, fixes: [] }], crossRole: [{ issue: 'units differ', roles: ['ux-researcher', 'data-scientist'] }] }
+  if (o.agentType.endsWith('overseer')) return { reports: [{ role: 'ux-researcher', pass: false, fixes: [{ item: 7, fix: 'rate as a ÷ b' }] }, { role: 'data-scientist', pass: true, fixes: [] }], crossRole: [{ issue: 'units differ', roles: ['ux-researcher', 'data-scientist'] }], coverage: [{ goal: 'SC1', roles: ['ux-researcher'], depth: 'partial', gap: 'no pick' }, { goal: 'SC2', roles: ['data-scientist'], depth: 'deep', gap: '' }] }
   if (o.agentType.endsWith('synthesizer')) return { file: '/p/PROPOSAL.md', tldr: ['t'], decisions: 1 }
   return { file: 'f', tldr: [], lowConfidence: 0 }
 }
@@ -35,7 +35,8 @@ const compare = (label, want) => {
 const args = { question: 'Q?', slug: 'sl', type: 'build', roles: ['ux-researcher', 'data-scientist'], goals: '/p/CLAUDE.md § Success criteria', projectRoot: '/p', pluginRoot: '/x', date: '2026-10-10' }
 const result = await runWorkflow(args, agent, parallel, quiet, quiet)
 
-const v = { root: '/p', plugin: '/x', question: 'Q?', date: '2026-10-10', slug: 'sl', type: 'build', goals: args.goals, typeDir: '/x/types/build', proposal: '/p/proposals/sl.md' }
+const v = { root: '/p', plugin: '/x', question: 'Q?', date: '2026-10-10', slug: 'sl', type: 'build', goals: args.goals, typeDir: '/x/types/build', proposal: '/p/proposals/sl.md', background: 'none' }
+const coverageList = '- SC1: partial (ux-researcher) — no pick\n- SC2: deep (data-scientist)'
 const out = r => `/p/references/sl-${r}.md`
 const reportList = args.roles.map(r => `- ${r}: ${out(r)}`).join('\n')
 const factSummary = args.roles.map(r => `${r}: 3 checked, 2 confirmed, 1 corrected, 0 unverified, 1 numbers recomputed`).join('\n')
@@ -46,27 +47,32 @@ const expected = {
   'fact-check:data-scientist': fill('Fact-check', { ...v, report: out('data-scientist') }),
   overseer: fill('Oversee', { ...v, reportList, factSummary }),
   'fix:ux-researcher': fill('Research', { ...v, output: out('ux-researcher') }) + fill('Fix', { fixList: '- [7] rate as a ÷ b' }),
-  synthesis: fill('Synthesis', { ...v, reportList, factSummary, crossList: '- units differ (ux-researcher, data-scientist)' }),
+  synthesis: fill('Synthesis', { ...v, reportList, factSummary, coverageList, crossList: '- units differ (ux-researcher, data-scientist)' }),
 }
 
 for (const [label, want] of Object.entries(expected)) compare(label, want)
-total += 2
+total += 3
+check('coverage returned', result.coverage.length === 2 && result.coverage[0].depth === 'partial', JSON.stringify(result.coverage))
 check('no unexpected agents', Object.keys(sent).length === Object.keys(expected).length, Object.keys(sent).join(','))
 check('stats: 7 agents, 1 fix pass', result.stats.agents === 7 && result.stats.fixPasses === 1, JSON.stringify(result.stats))
 
 // Strategy round: type paths reach every prompt; roles outside the overseer stub still run.
 sent = {}
-const sArgs = { ...args, type: 'strategy', roles: ['competitive-analyst', 'staff-software-engineer'], goals: 'G1 grow revenue; G2 enter EU' }
-const sv = { ...v, type: 'strategy', goals: sArgs.goals, typeDir: '/x/types/strategy' }
+const sArgs = { ...args, type: 'strategy', roles: ['competitive-analyst', 'ml-engineer'], goals: 'G1 grow revenue; G2 enter EU', inputs: ['/p/references/r1-ml-engineer.md', '/p/proposals/r1.md'] }
+const sv = { ...v, type: 'strategy', goals: sArgs.goals, typeDir: '/x/types/strategy', background: '/p/references/r1-ml-engineer.md, /p/proposals/r1.md' }
 const sOut = r => `/p/references/sl-${r}.md`
 const sResult = await runWorkflow(sArgs, agent, parallel, quiet, quiet)
 compare('research:competitive-analyst', fill('Research', { ...sv, output: sOut('competitive-analyst') }))
-compare('research:staff-software-engineer', fill('Research', { ...sv, output: sOut('staff-software-engineer') }))
-compare('synthesis', fill('Synthesis', { ...sv, reportList: sArgs.roles.map(r => `- ${r}: ${sOut(r)}`).join('\n'), factSummary: sArgs.roles.map(r => `${r}: 3 checked, 2 confirmed, 1 corrected, 0 unverified, 1 numbers recomputed`).join('\n'), crossList: '- units differ (ux-researcher, data-scientist)' }))
+compare('research:ml-engineer', fill('Research', { ...sv, output: sOut('ml-engineer') }))
+compare('synthesis', fill('Synthesis', { ...sv, reportList: sArgs.roles.map(r => `- ${r}: ${sOut(r)}`).join('\n'), factSummary: sArgs.roles.map(r => `${r}: 3 checked, 2 confirmed, 1 corrected, 0 unverified, 1 numbers recomputed`).join('\n'), coverageList, crossList: '- units differ (ux-researcher, data-scientist)' }))
 total += 1
 check('strategy result type', sResult.type === 'strategy', sResult.type)
 
-total += 2
+total += 4
+const old = await runWorkflow({ ...args, roles: ['architect'] }, agent, parallel, quiet, quiet)
+check('merged role rejected', old.started === false && /architect/.test(old.problems.join()), JSON.stringify(old.problems))
+const relInputs = await runWorkflow({ ...args, inputs: ['references/x.md'] }, agent, parallel, quiet, quiet)
+check('relative inputs rejected', relInputs.started === false && /inputs/.test(relInputs.problems.join()), JSON.stringify(relInputs.problems))
 const bad = await runWorkflow({ question: 'q', slug: 'Bad Slug', type: 'plan', roles: ['nope'], projectRoot: 'rel', pluginRoot: '/x' }, agent, parallel, quiet, quiet)
 check('bad args rejected', bad.started === false && bad.problems.length === 5, JSON.stringify(bad.problems))
 const noGoals = await runWorkflow({ ...args, goals: '' }, agent, parallel, quiet, quiet)

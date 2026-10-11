@@ -13,9 +13,8 @@ import json, os, sys, time
 
 HOOK = 'research-round-write-scope'
 PREFIX = 'research-round:'
-ROLES = {'product-designer', 'ux-researcher', 'market-researcher', 'ranking-engineer',
-         'architect', 'data-scientist', 'data-engineer', 'competitive-analyst',
-         'staff-software-engineer'}
+ROLES = {'product-designer', 'ux-researcher', 'competitive-analyst', 'data-scientist',
+         'staff-software-engineer', 'ml-engineer'}
 LOG = os.environ.get('CLAUDE_HOOK_LOG', os.path.expanduser('~/.claude/logs/hooks.jsonl'))
 
 

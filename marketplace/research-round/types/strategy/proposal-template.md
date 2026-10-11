@@ -1,36 +1,47 @@
 # Strategy proposal — template
 
-The synthesizer writes this from the role reports: the draft of a **12-month strategy**.
-Link each claim to the report it comes from (`../references/<file>.md#section`). Don't repeat
-what a report already says: decide, score and order.
+The synthesizer writes this from the role reports: the draft of a **12-month strategy**, built on
+the strategy kernel (diagnosis → guiding policy → coherent actions). Link each claim to the report
+it comes from (`../references/<file>.md#section`). Decide, score and order; don't repeat reports.
+
+**If the goals or background name a brief with its own structure or length** (e.g. a case
+study's questions, "max 6 pages"), use the brief's structure and limit for the main body, answer
+each of its questions under its own heading, and move the remaining sections below to an appendix.
 
 ```markdown
 # 12-month strategy — <question>
 
-<date> · Round: <slug> · Reports: [role](../references/<slug>-<role>.md), … · Status: **for review**
+<date> · Round: <slug> · Mode: external market | internal platform · Reports: [role](../references/<slug>-<role>.md), … · Status: **for review**
 
 ## TL;DR
 
-- Where to play, how to win, the 2–3 bets, and the one decision that most needs Sarah.
+- Diagnosis in one line, the north star, the 2–3 bets, and the one decision that most needs Sarah.
 
 ## Terms
 
 | Term | Meaning here |
 |---|---|
 
-## Market
+## Diagnosis
 
-Size (top-down and bottom-up, with the gap explained), growth, segments, trends.
+The few problems that matter most, ranked, with evidence. What makes them hard.
 
-## Competitors and positioning
+## North star and guiding policy
 
-| Competitor / substitute | Strength | Weakness | Likely next move | Our angle |
+The north-star metric and why; the guiding policy (the approach that rules options in or out);
+for an internal platform, the boundary: what the platform owns vs each product, and the contract.
+
+## Market or demand · alternatives
+
+Size or demand (with method), trends, and the comparison of competitors or benchmarks and
+buy / build / extend options.
+
+## Strategic bets and trade-offs
+
+| Bet | Goals served | Why now | Cost / effort (assumptions) | Confidence |
 |---|---|---|---|---|
 
-## Strategic bets
-
-| Bet | Goals served | Why us | Cost / effort (assumptions) | Confidence |
-|---|---|---|---|---|
+How the bets trade off against each other (e.g. quality vs latency vs cost), and the rule used.
 
 ## 12-month roadmap
 
@@ -43,9 +54,16 @@ Size (top-down and bottom-up, with the gap explained), growth, segments, trends.
 
 **Not doing this year:** … (and why)
 
-## KPIs
+## Metrics and the learning loop
 
-| KPI (numerator ÷ denominator) | Baseline | 12-month target | Source |
+| Metric (numerator ÷ denominator) | Type (north star / input / guardrail) | Baseline | 12-month target | Source |
+|---|---|---|---|---|
+
+The experiments planned, and how results move the roadmap (review cadence, decision rules).
+
+## Assumptions
+
+| Assumption | Why we assume it | How it shapes the recommendation | How to check |
 |---|---|---|---|
 
 ## Risks
@@ -62,7 +80,7 @@ How each disagreement was settled, and why.
 | # | Decision | Default | Blocks | Source |
 |---|---|---|---|---|
 
-## Confidence and what to re-check each quarter
+## Confidence and coverage
 
-What rests on Low-confidence or unverified evidence, and the assumptions that would change the plan.
+What rests on Low-confidence or unverified evidence; every goal the overseer rated partial or none.
 ```

@@ -19,6 +19,8 @@ CASES = [  # (name, event, expect_deny)
     ('role, absolute path', ev('research-round:ux-researcher', f'{P}/references/waste-ux-researcher.md'), False),
     ("role writes another role's report", ev('research-round:ux-researcher', 'references/waste-architect.md'), True),
     ('role writes CLAUDE.md', ev('research-round:data-scientist', 'CLAUDE.md'), True),
+    ('ml-engineer writes own report', ev('research-round:ml-engineer', 'references/wibey-ml-engineer.md'), False),
+    ('merged role (architect) denied', ev('research-round:architect', 'references/x-architect.md'), True),
     ('role escapes with ..', ev('research-round:ux-researcher', 'references/../../x-ux-researcher.md'), True),
     ('role writes into a subfolder', ev('research-round:ux-researcher', 'references/sub/waste-ux-researcher.md'), True),
     ('fact-checker edits a report', ev('research-round:fact-checker', 'references/waste-architect.md', 'Edit'), False),
