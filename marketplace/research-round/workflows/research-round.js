@@ -15,6 +15,8 @@ export const meta = {
 
 // Agent count = 2 per role (writer + fact-checker) + overseer + fix passes (failing reports
 // only) + synthesis: at most 3 × roles + 2. The skill picks up to 3 roles by default (≤ 11).
+// Every prompt below is mirrored in prompts.md for the skill's fallback; tests/test_prompts.mjs
+// checks they match.
 
 const ROLES = ['product-designer', 'ux-researcher', 'market-researcher', 'ranking-engineer',
   'architect', 'data-scientist', 'data-engineer']
