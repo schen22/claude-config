@@ -100,8 +100,6 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - **research-round: measure the cuts** (0.2.0) on the next real round: expected ~1.5M tokens
   and ~$2 list, down from ~2.79M and $3.61 (assumes ~200k for the main session, 2 of 3 fix passes
   skipped). Record agents, tokens and time here.
-- **Install research-round** (after committing `settings.json`):
-  `claude plugin marketplace add ~/.claude` → `claude plugin install research-round@sarah-config`.
 
 - **Adopt web-kit** — tasks written into each project's CLAUDE.md; Sarah starts a session
   there: shindig-thingamajig (required), schen22.github.io (required; confirm its purpose
@@ -117,6 +115,8 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 
 ## Done
 
+- 2026-10-10 · Installed `research-round` 0.4.0 (user scope) from the local `sarah-config`
+  marketplace, for wibey-case.
 - 2026-10-10 · `research-round` 0.4.0: six roles (product-designer, ux-researcher,
   competitive-analyst, data-scientist, staff-software-engineer, ml-engineer) with standard methods
   in each lens; strategy internal-platform mode; kernel-based strategy template with an

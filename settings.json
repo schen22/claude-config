@@ -52,7 +52,16 @@
   "enabledPlugins": {
     "claude-md-management@claude-plugins-official": true,
     "session-report@claude-plugins-official": true,
-    "cc-plugin-you-should-know@builtin": true
+    "cc-plugin-you-should-know@builtin": true,
+    "research-round@sarah-config": true
+  },
+  "extraKnownMarketplaces": {
+    "sarah-config": {
+      "source": {
+        "source": "directory",
+        "path": "/Users/sarahchen/.claude"
+      }
+    }
   },
   "autoMode": {
     "soft_deny": [
