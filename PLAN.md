@@ -88,6 +88,12 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 
 ## Next
 
+- **research-round: first strategy round in Cowork on the web** (Sarah's new project). Install
+  from Customize → Plugins (marketplace `schen22/claude-config`, Claude GitHub App on the repo).
+  Check: agents run, `write-scope` runs (needs python3 server-side), where `references/` and
+  `proposals/` land, and agents / tokens / time.
+- **food-planner:** its `check-docs.mjs` lists `PROPOSAL.md` but not `proposals/*.md`; tell the
+  food-planner session when it next runs a round.
 - **research-round: run the workflow path once.** The 2026-10-10 trial ran the skill
   fallback (no Workflow tool in `claude -p`). Run `/research-round` in an interactive session
   that has workflows, and check that `write-scope` and `usage-ledger` see workflow agents.
@@ -111,6 +117,10 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 
 ## Done
 
+- 2026-10-10 · `research-round` 0.3.0: round types `build` and `strategy` (12-month market
+  strategy), each with a brief, extra checklist and proposal template; new roles
+  `competitive-analyst` and `staff-software-engineer`; goals from `CLAUDE.md`, a named file or the
+  question; proposals at `proposals/<slug>.md`. Tests: prompts 15, write-scope 18.
 - 2026-10-10 · `research-round` 0.2.0, cost cuts from the trial: the skill pins `model: sonnet`
   (the coordinator was ~49% of tokens) and flags judgement calls (⚑) instead of deciding them;
   role agents self-check against `checklist.md`; the fallback reads `prompts.md`, kept in sync
@@ -181,6 +191,13 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - 2026-10-10 · research-round coordinator runs on Sonnet (pinned in the skill); synthesis
   stays Opus. The coordinator only hands out prompts; any judgement call is flagged ⚑ for
   Sarah with options and a default. Kept: a fact-checker per report, the overseer, Opus synthesis.
+- 2026-10-10 · research-round 0.3.0: one plugin, two round types sharing one pipeline. Strategy
+  roles (Sarah): competitive-analyst, data-scientist, staff-software-engineer (feasibility,
+  architecture, security, build vs buy vs extend, risks), ux-researcher. A strategy analyst or
+  PMM role is not needed: Opus synthesis does the strategist's job. One proposal per round
+  (`proposals/<slug>.md`) instead of one `PROPOSAL.md` per project.
+- 2026-10-10 · Cowork also runs on the web (claude.ai Home → Cowork); files are saved to the
+  account, not a local folder. Earlier note "Cowork = desktop only" was wrong.
 
 ## Lessons
 
