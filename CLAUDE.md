@@ -9,6 +9,8 @@ A project's own `CLAUDE.md` wins where it is more specific.
 - Say what you're thinking and why. Don't assume — ask when a decision is Sarah's.
 - **Verify before claiming.** Check current behaviour (build, run, read) before describing it.
 - **Terse.** Tables, diffs, short bullets.
+- **Hyperlink doc references.** Every mention of another doc, in files and in replies, is a
+  Markdown link (to the section anchor when there is one).
 
 ## State
 

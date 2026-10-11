@@ -208,6 +208,8 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   (market-researcher → competitive-analyst, data-engineer → data-scientist, architect →
   staff-software-engineer, ranking-engineer → ml-engineer). A new role only when the overseer's
   coverage shows a goal stuck at partial (README "When a role is stretched").
+- 2026-10-10 · Hyperlink every doc reference, in files and replies (Sarah, wibey-case).
+  Added to `~/.claude/CLAUDE.md` § How we work.
 
 ## Lessons
 
