@@ -32,7 +32,7 @@ the ~24–35k starting context is Claude Code's own system prompt and tools):
 | Descriptions of 10 user skills | 1,150 |
 | Descriptions of 12 synced skills (`anthropic-skills:*`, from claude.ai) | 2,220 |
 | Plugins: `claude-md-management` 177, `session-report` 72 | 250 |
-| `research-round` plugin, once installed (10 agent + 1 skill + 1 workflow descriptions) | ~480 |
+| `research-round` plugin, once installed (9 agent + 1 skill + 1 workflow descriptions) | ~470 |
 | Project `CLAUDE.md` (per project) | 800–1,300 |
 
 **Loaded only when used:**
@@ -117,6 +117,11 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 
 ## Done
 
+- 2026-10-10 · `research-round` 0.4.0: six roles (product-designer, ux-researcher,
+  competitive-analyst, data-scientist, staff-software-engineer, ml-engineer) with standard methods
+  in each lens; strategy internal-platform mode; kernel-based strategy template with an
+  assumptions register; synthesis follows a brief's structure; overseer coverage per goal; `inputs`;
+  README with role picker and split rules. Tests: prompts 18, write-scope 20.
 - 2026-10-10 · `research-round` 0.3.0: round types `build` and `strategy` (12-month market
   strategy), each with a brief, extra checklist and proposal template; new roles
   `competitive-analyst` and `staff-software-engineer`; goals from `CLAUDE.md`, a named file or the
@@ -198,6 +203,11 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   (`proposals/<slug>.md`) instead of one `PROPOSAL.md` per project.
 - 2026-10-10 · Cowork also runs on the web (claude.ai Home → Cowork); files are saved to the
   account, not a local folder. Earlier note "Cowork = desktop only" was wrong.
+- 2026-10-10 · One plugin for product builds and product strategy: same pipeline, the type
+  changes only the output and phasing; scale comes from the goals. Roles merged 9 → 6
+  (market-researcher → competitive-analyst, data-engineer → data-scientist, architect →
+  staff-software-engineer, ranking-engineer → ml-engineer). A new role only when the overseer's
+  coverage shows a goal stuck at partial (README "When a role is stretched").
 
 ## Lessons
 
