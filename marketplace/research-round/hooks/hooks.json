@@ -1,0 +1,13 @@
+{
+  "description": "research-round agents may write only their own output file: a role its references/<slug>-<role>.md, the fact-checker a references/*.md, the synthesizer PROPOSAL.md.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          { "type": "command", "command": "python3 -S \"${CLAUDE_PLUGIN_ROOT}/hooks/write-scope.py\"", "timeout": 10 }
+        ]
+      }
+    ]
+  }
+}

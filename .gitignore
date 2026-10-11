@@ -8,6 +8,8 @@
 !/hooks/
 !/skills/
 !/agents/
+!/.claude-plugin/
+!/marketplace/
 /skills/synced/
 *.skill
 __pycache__/

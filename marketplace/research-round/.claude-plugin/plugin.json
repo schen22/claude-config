@@ -1,0 +1,6 @@
+{
+  "name": "research-round",
+  "version": "0.1.0",
+  "description": "One research round on a project question: up to 3 role agents research in parallel, a fact-checker per report verifies claims and recomputes numbers, an overseer applies a checklist and sends fixes back once, and an Opus synthesis writes PROPOSAL.md scored against the project's success criteria.",
+  "author": { "name": "Sarah Chen" }
+}
