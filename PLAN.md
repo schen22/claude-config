@@ -268,3 +268,5 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - A data-science report credited adoption growth to the platform, used point targets with no
   derivation and called an adoption threshold an MDE. Checklist M1–M11 now gates any report that
   sets metrics or projections.
+- A synthesis given an earlier proposal as background wrote a diff on it (wibey-case A.2), so the
+  old proposal couldn't be deleted. research-round 0.5.3: the proposal must stand alone.

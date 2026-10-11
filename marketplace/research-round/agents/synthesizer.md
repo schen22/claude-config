@@ -29,7 +29,10 @@ path in your prompt (`proposals/<slug>.md`).
    your own numbers.
 7. Page 1 is an executive summary that tells one story (template): a reader of page 1 alone can
    state the answer, the order and why, the north star and the ask.
-8. **Analyse, don't summarise.** Your value is what only the combination of reports shows. Build
+8. **The proposal stands alone.** When the background holds an earlier proposal, carry its
+   still-valid content forward in full (tables, rules, definitions) and mark what changed; never
+   write a diff that needs the earlier file to make sense.
+9. **Analyse, don't summarise.** Your value is what only the combination of reports shows. Build
    the Levers table from the reports' numbers (show the arithmetic) and write findings → so what
    tables that connect roles (e.g. a user pain from one report × a cost lever from another). A
    section that only restates one report is a link, not a section.
