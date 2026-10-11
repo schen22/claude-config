@@ -91,8 +91,9 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - **research-round: run the workflow path once.** The 2026-10-10 trial ran the skill
   fallback (no Workflow tool in `claude -p`). Run `/research-round` in an interactive session
   that has workflows, and check that `write-scope` and `usage-ledger` see workflow agents.
-- **research-round cost:** the orchestrating session ran on Opus and used ~1.37M of the ~2.79M
-  tokens processed. Decide: start rounds from a Sonnet session, or pin the skill's model.
+- **research-round: measure the cuts** (0.2.0) on the next real round: expected ~1.5M tokens
+  and ~$2 list, down from ~2.79M and $3.61 (assumes ~200k for the main session, 2 of 3 fix passes
+  skipped). Record agents, tokens and time here.
 - **Install research-round** (after committing `settings.json`):
   `claude plugin marketplace add ~/.claude` → `claude plugin install research-round@sarah-config`.
 
@@ -110,6 +111,10 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 
 ## Done
 
+- 2026-10-10 · `research-round` 0.2.0, cost cuts from the trial: the skill pins `model: sonnet`
+  (the coordinator was ~49% of tokens) and flags judgement calls (⚑) instead of deciding them;
+  role agents self-check against `checklist.md`; the fallback reads `prompts.md`, kept in sync
+  with the workflow by `tests/test_prompts.mjs` (10 checks).
 - 2026-10-10 · `research-round` plugin 0.1.0 (`marketplace/research-round/`; the repo root is
   the `sarah-config` marketplace): 7 role agents (product-designer, ux-researcher,
   market-researcher, ranking-engineer, architect, data-scientist, data-engineer), fact-checker,
@@ -173,6 +178,9 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   `agent_id` + `agent_type` (`research-round:<name>`), so `helper-guard` and `write-scope` act
   on them; `usage-ledger` logged all 11. `brief-check` skips named agent types by design.
   Workflow agents untested.
+- 2026-10-10 · research-round coordinator runs on Sonnet (pinned in the skill); synthesis
+  stays Opus. The coordinator only hands out prompts; any judgement call is flagged ⚑ for
+  Sarah with options and a default. Kept: a fact-checker per report, the overseer, Opus synthesis.
 
 ## Lessons
 
@@ -210,3 +218,5 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   use `git diff > patch` / `git checkout` / `git apply`.
 - `claude -p` has no Workflow tool, so a workflow can't be trial-run headless. The skill
   fallback ran instead. Ship every workflow with a fallback path the skill can run.
+- A skill's `model:` frontmatter switches the model for that skill's turn (checked with a
+  `model: haiku` test skill in `claude -p`: only Haiku ran). Pin coordinator skills to Sonnet.
