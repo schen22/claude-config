@@ -57,8 +57,8 @@ the ~24–35k starting context is Claude Code's own system prompt and tools):
 
 | Hook | Event | Mode | What |
 |---|---|---|---|
-| `brief-check.py` | PreToolUse `Agent` | enforce | Helper brief follows the `delegate` template; opus/fable needs a reason |
-| `helper-guard.py` | PreToolUse Bash/Read/Edit/Write/NotebookEdit, subagents only | enforce | 150k budget → wrap up; raw test runs → gate; no images |
+| `brief-check.py` | PreToolUse `Agent` | log | Helper brief follows the `delegate` template; opus/fable needs a reason |
+| `helper-guard.py` | PreToolUse Bash/Read/Edit/Write/NotebookEdit, subagents only | log | 150k budget → wrap up; raw test runs → gate; no images |
 | `usage-ledger.py` | SubagentStop | always on | One row per helper in `logs/agents.jsonl` |
 | `research-round` `write-scope.py` | PreToolUse Write/Edit, `research-round:*` agents only | enforce | Role → its `references/<slug>-<role>.md`; fact-checker → `references/*.md`; synthesizer → `PROPOSAL.md` |
 | `hook-review.py` | SessionStart | always on | From the date in `hooks/REVIEW_DUE`, asks for the hook review each session until done |
@@ -210,6 +210,9 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   coverage shows a goal stuck at partial (README "When a role is stretched").
 - 2026-10-10 · Hyperlink every doc reference, in files and replies (Sarah, wibey-case).
   Added to `~/.claude/CLAUDE.md` § How we work.
+- 2026-10-10 · Reverted brief-check and helper-guard to log mode (Sarah): enforce mode is
+  untested with research-round's agents (up to 11 per round, Opus synthesis); wibey-case deadline
+  Wed. Re-enable after a round runs clean with them logging.
 
 ## Lessons
 
