@@ -89,6 +89,7 @@ Question: ${a.question}
 Date: ${date}
 Your output file (write only this one): ${fileOf(role)}
 Report template and rules: ${plugin}/report-template.md
+Checklist (check your report against it before returning): ${plugin}/checklist.md
 Project brief with the success criteria: ${root}/CLAUDE.md${fixes ? `
 
 This is your one fix pass. The report already exists at your output path, fact-checked. Apply
