@@ -32,6 +32,7 @@ the ~24–35k starting context is Claude Code's own system prompt and tools):
 | Descriptions of 10 user skills | 1,150 |
 | Descriptions of 12 synced skills (`anthropic-skills:*`, from claude.ai) | 2,220 |
 | Plugins: `claude-md-management` 177, `session-report` 72 | 250 |
+| `research-round` plugin, once installed (10 agent + 1 skill + 1 workflow descriptions) | ~480 |
 | Project `CLAUDE.md` (per project) | 800–1,300 |
 
 **Loaded only when used:**
@@ -50,6 +51,7 @@ the ~24–35k starting context is Claude Code's own system prompt and tools):
 | `working-model` | 1,880 | Right-size docs and oversight |
 | `claude-md-improver` / `revise-claude-md` | 2,200 / 500 | CLAUDE.md audit / session learnings |
 | `session-report` | 1,100 | Token usage report |
+| `research-round` | ~970 skill + ~1,300 templates (read by its agents) | `/research-round <question>` → role reports + `PROPOSAL.md` |
 
 **Runs outside context** (0 tokens unless it blocks or reminds):
 
@@ -58,6 +60,7 @@ the ~24–35k starting context is Claude Code's own system prompt and tools):
 | `brief-check.py` | PreToolUse `Agent` | enforce | Helper brief follows the `delegate` template; opus/fable needs a reason |
 | `helper-guard.py` | PreToolUse Bash/Read/Edit/Write/NotebookEdit, subagents only | enforce | 150k budget → wrap up; raw test runs → gate; no images |
 | `usage-ledger.py` | SubagentStop | always on | One row per helper in `logs/agents.jsonl` |
+| `research-round` `write-scope.py` | PreToolUse Write/Edit, `research-round:*` agents only | enforce | Role → its `references/<slug>-<role>.md`; fact-checker → `references/*.md`; synthesizer → `PROPOSAL.md` |
 | `hook-review.py` | SessionStart | always on | From the date in `hooks/REVIEW_DUE`, asks for the hook review each session until done |
 
 Settings: `CLAUDE_CODE_SUBAGENT_MODEL=sonnet`. Tests: `python3 hooks/test_hooks.py`.
@@ -85,6 +88,14 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 
 ## Next
 
+- **research-round: run the workflow path once.** The 2026-10-10 trial ran the skill
+  fallback (no Workflow tool in `claude -p`). Run `/research-round` in an interactive session
+  that has workflows, and check that `write-scope` and `usage-ledger` see workflow agents.
+- **research-round cost:** the orchestrating session ran on Opus and used ~1.37M of the ~2.79M
+  tokens processed. Decide: start rounds from a Sonnet session, or pin the skill's model.
+- **Install research-round** (after committing `settings.json`):
+  `claude plugin marketplace add ~/.claude` → `claude plugin install research-round@sarah-config`.
+
 - **Adopt web-kit** — tasks written into each project's CLAUDE.md; Sarah starts a session
   there: shindig-thingamajig (required), schen22.github.io (required; confirm its purpose
   first), sarahs-corner (optional, later).
@@ -92,10 +103,23 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 
 ## Later
 
+- **research-round in Cowork:** install the plugin from `schen22/claude-config` (private: needs
+  GitHub access from Cowork), run one small round, confirm skills + agents load and whether
+  the workflow runs, else the skill fallback.
 - **hookify:** only if many simple text rules are wanted.
 
 ## Done
 
+- 2026-10-10 · `research-round` plugin 0.1.0 (`marketplace/research-round/`; the repo root is
+  the `sarah-config` marketplace): 7 role agents (product-designer, ux-researcher,
+  market-researcher, ranking-engineer, architect, data-scientist, data-engineer), fact-checker,
+  overseer, synthesizer (Opus); `report-template.md`, `checklist.md`, `proposal-template.md`;
+  workflow `research-round.js`; skill `/research-round` (calls the workflow, else runs the same
+  phases through the Agent tool); `write-scope` hook + 14 tests. Trial in food-planner
+  ("How should SC4 be measured?", 3 roles, skill fallback): **11 agents, 535 s, ~$3.61 list**;
+  subagents 856k tokens processed (synthesis 151k), main session ~1.37M (Opus); ~2.79M across all models; 3 reports
+  fact-checked (14 corrected, ~10 unverified), all 3 failed the checklist once and were fixed;
+  docs check passed; only the 4 round files written. PushNotification skipped (Remote Control off).
 - 2026-09-30 · `commit` skill: peer-session check before staging; `gate-head.sh` runs
   the gate on a clean checkout of HEAD (`commit` ~480 → ~700 tokens, chars÷4).
 - 2026-09-28 · `~/.claude` is a git repo (allowlist `.gitignore`: setup files only), pushed
@@ -140,6 +164,16 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   `helper-guard` switched to enforce, unchanged. 24 image/screenshot and 19 incomplete-brief
   calls would have been denied.
 
+- 2026-10-10 · research-round: up to 3 roles per round by default (≤ 3 × roles + 2 = 11 agents),
+  4+ only when Sarah names them; every report always gets its own fact-checker; one fix pass,
+  failing reports only. Opus only for synthesis (cross-role judgement). Agents may write only
+  their own file, enforced by the plugin's `write-scope` hook. The plugin lives in claude-config
+  so Cowork can install it; trial with `--plugin-dir` so `settings.json` isn't touched.
+- 2026-10-10 · Hook visibility (trial): PreToolUse events from plugin subagents carry
+  `agent_id` + `agent_type` (`research-round:<name>`), so `helper-guard` and `write-scope` act
+  on them; `usage-ledger` logged all 11. `brief-check` skips named agent types by design.
+  Workflow agents untested.
+
 ## Lessons
 
 - Lessons saved in local memory or a session scratchpad never reach the next session
@@ -174,3 +208,5 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - `git stash` is one list for every worktree: the orchestrator's pop took a helper's stashed
   CSS edit (sarahs-corner, 2026-10-03). `delegate` brief Gate + "While it runs": no stash;
   use `git diff > patch` / `git checkout` / `git apply`.
+- `claude -p` has no Workflow tool, so a workflow can't be trial-run headless. The skill
+  fallback ran instead. Ship every workflow with a fallback path the skill can run.
