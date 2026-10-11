@@ -115,6 +115,13 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 
 ## Done
 
+- 2026-10-10 · `research-round` 0.5.0 after wibey-case Round A (rated unusable by Sarah on first
+  pass): Key findings and trends section and role-native artifacts per role (data-scientist driver
+  tree, scenarios, derived targets, experiment cards, value bridge; ux-researcher voice-of-user
+  themes, journey map, severity × frequency, study plan; competitive-analyst capability matrix,
+  positioning map, dated trends, parity/differentiate/ignore); Mermaid diagrams; no invented
+  research; checklist items 11–14 and metrics section M1–M11; narrative executive summary and
+  learnings-by-role in the strategy proposal. Tests: prompts 18, write-scope 20.
 - 2026-10-10 · Installed `research-round` 0.4.0 (user scope) from the local `sarah-config`
   marketplace, for wibey-case.
 - 2026-10-10 · `research-round` 0.4.0: six roles (product-designer, ux-researcher,
@@ -252,3 +259,9 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   fallback ran instead. Ship every workflow with a fallback path the skill can run.
 - A skill's `model:` frontmatter switches the model for that skill's turn (checked with a
   `model: haiku` test skill in `claude -p`: only Haiku ran). Pin coordinator skills to Sonnet.
+- One shared report template and one shared question made three roles write the same report
+  (wibey-case Round A). Each role now has its own artifact list and the template leads with
+  non-obvious findings; the overseer checks both (checklist 11–14).
+- A data-science report credited adoption growth to the platform, used point targets with no
+  derivation and called an adoption threshold an MDE. Checklist M1–M11 now gates any report that
+  sets metrics or projections.

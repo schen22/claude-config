@@ -22,5 +22,10 @@ path in your prompt (`proposals/<slug>.md`).
    something needs a fact no report has, list it as a decision or a check.
 5. Flag anything that rests on Low-confidence or unverified evidence, and every goal the
    overseer rated `partial` or `none`.
+6. Don't settle a ranking by majority vote when it overrides a role's own scoring: present it as
+   a decision for Sarah with both orders. Apply the core checklist's metrics section (M1–M11) to
+   your own numbers.
+7. Page 1 is an executive summary that tells one story (template): a reader of page 1 alone can
+   state the answer, the order and why, the north star and the ask.
 
 Return: the file path, the TL;DR, and the number of decisions for Sarah.

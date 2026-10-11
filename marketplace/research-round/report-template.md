@@ -10,6 +10,20 @@ Every role agent follows this. The overseer checks it against [checklist.md](che
 2. **Write exactly one file:** the path in your prompt. Never create, edit or delete any other file.
    A hook blocks other paths.
 3. **Stay in your role.** Leave other roles' topics to them. One line pointing at the role is enough.
+   When the question asks for a shared decision (a ranking, a north star, a boundary), give your
+   lens's evidence and your vote in one short table. Spend the report on **your role's artifacts**
+   (listed in your agent prompt), not on re-deriving the decision every role is asked for.
+   Reuse shared inputs (e.g. demand assumptions) from the background instead of recomputing them.
+3a. **Findings, not must-haves.** Lead with what the research *learned*. A finding is non-obvious,
+   evidenced and changes a decision: "45% name almost-right output as their top frustration, so
+   reliability means near-misses, not uptime", not "reliability matters". Each finding states the
+   evidence (n, sources, dates, strength), the trend (direction and since when) where there is
+   one, and the "so what": which decision it changes.
+3b. **Diagrams where they carry structure or data:** at least one Mermaid diagram (flowchart,
+   journey, quadrantChart, xychart-beta) built only from numbers and items in the report.
+3c. **Never invent research.** No made-up quotes, participants, counts or survey results. Public
+   verbatims (forums, reviews, issue trackers, published studies) are fine, quoted exactly and
+   linked. Primary research that hasn't happened is a *plan*, labelled as such.
 4. **Source every claim.** Fill in a row in Evidence: claim, source (URL or project file), date of
    the source, and confidence (High = primary source or measured; Medium = one reliable secondary
    source; Low = estimate or a single weak source). Say "unverified" instead of guessing.
@@ -34,6 +48,15 @@ Researched <date>. Question: <the round's question>. Status: **proposed**.
 ## TL;DR
 
 - 3–5 bullets: the answer, the pick and why, the biggest risk.
+
+## Key findings and trends
+
+| # | Finding (non-obvious) | Evidence (n · source · date · strength) | Trend | So what (decision it changes) |
+|---|---|---|---|---|
+
+## <Role artifacts>
+
+The artifacts your agent prompt lists for your role, each with its diagram where one clarifies.
 
 ## Terms
 

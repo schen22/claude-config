@@ -13,9 +13,24 @@ each of its questions under its own heading, and move the remaining sections bel
 
 <date> · Round: <slug> · Mode: external market | internal platform · Reports: [role](../references/<slug>-<role>.md), … · Status: **for review**
 
-## TL;DR
+## Executive summary
 
-- Diagnosis in one line, the north star, the 2–3 bets, and the one decision that most needs Sarah.
+Page 1, one story (Pyramid Principle):
+- **Governing thought** in one sentence: the answer.
+- **The story**: one concrete user's experience that shows the problems, then SCQA
+  (situation, complication, question, answer) in a short table or ≤ 5 lines.
+- **The order is the story**: the bets in order, with the one-line reason each comes where it does.
+- **How we'll know**: the north star credited honestly against a do-nothing baseline, commit /
+  stretch, the guardrails.
+- **Why it's worth it**: the value bridge. **The ask**: what Sarah or the panel approves.
+
+## What we learned, by role
+
+| Role | Finding (non-obvious) | So what | Source |
+|---|---|---|---|
+
+2–3 findings per role, taken from each report's Key findings. Include the reports' diagrams where
+they make the argument clearer.
 
 ## Terms
 
@@ -56,8 +71,11 @@ How the bets trade off against each other (e.g. quality vs latency vs cost), and
 
 ## Metrics and the learning loop
 
-| Metric (numerator ÷ denominator) | Type (north star / input / guardrail) | Baseline | 12-month target | Source |
-|---|---|---|---|---|
+| Group (question it answers) | Metric (numerator ÷ denominator) | Problem | Baseline | Commit / stretch | Measurability (A/B/C) |
+|---|---|---|---|---|---|
+
+Projection: do-nothing vs commit vs stretch, low / base / high scenarios. Experiment cards per the
+core checklist M7.
 
 The experiments planned, and how results move the roadmap (review cadence, decision rules).
 
