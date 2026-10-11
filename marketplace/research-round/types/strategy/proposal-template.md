@@ -32,6 +32,18 @@ Page 1, one story (Pyramid Principle):
 2–3 findings per role, taken from each report's Key findings. Include the reports' diagrams where
 they make the argument clearer.
 
+## Levers: what moves the north star and the cost
+
+Decompose the north star and the main cost metric into a formula, then one row per lever:
+
+| Lever | Term in the formula | Problem | Baseline → change | Effect on the metric (arithmetic) | Effect on quality and human time | Confidence · source |
+|---|---|---|---|---|---|---|
+
+Then **findings → so what**: 3–5 cross-role findings no single report states alone (e.g. the lever
+that moves quality and cost together; the pure-cost lever that needs no bet; the lever that pays
+on cost while quality falls, so it needs a guardrail; whether the levers combined make a target
+too easy or too hard).
+
 ## Terms
 
 | Term | Meaning here |
