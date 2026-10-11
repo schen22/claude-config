@@ -2,11 +2,13 @@
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "sarah-config",
   "description": "Sarah's own plugins, from the claude-config repo.",
-  "owner": { "name": "Sarah Chen" },
+  "owner": {
+    "name": "Sarah Chen"
+  },
   "plugins": [
     {
       "name": "research-round",
-      "description": "/research-round <question>: role agents research in parallel, fact-checkers verify, an overseer reviews, one PROPOSAL.md comes back.",
+      "description": "/research-round <question>: build or 12-month strategy rounds. Role agents research in parallel, fact-checkers verify, an overseer reviews, one proposals/<slug>.md comes back.",
       "source": "./marketplace/research-round"
     }
   ]

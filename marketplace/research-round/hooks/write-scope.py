@@ -3,7 +3,7 @@
 
   role agent    → <cwd>/references/*-<role>.md
   fact-checker  → <cwd>/references/*.md
-  synthesizer   → <cwd>/PROPOSAL.md
+  synthesizer   → <cwd>/proposals/*.md
   anything else (overseer, unknown) → denied
 
 Other agents and the main session are never touched. Logs to $CLAUDE_HOOK_LOG
@@ -14,7 +14,8 @@ import json, os, sys, time
 HOOK = 'research-round-write-scope'
 PREFIX = 'research-round:'
 ROLES = {'product-designer', 'ux-researcher', 'market-researcher', 'ranking-engineer',
-         'architect', 'data-scientist', 'data-engineer'}
+         'architect', 'data-scientist', 'data-engineer', 'competitive-analyst',
+         'staff-software-engineer'}
 LOG = os.environ.get('CLAUDE_HOOK_LOG', os.path.expanduser('~/.claude/logs/hooks.jsonl'))
 
 
@@ -38,7 +39,7 @@ def allowed(kind, path, cwd):
     if kind == 'fact-checker':
         return in_refs
     if kind == 'synthesizer':
-        return real == os.path.join(root, 'PROPOSAL.md')
+        return os.path.dirname(real) == os.path.join(root, 'proposals') and real.endswith('.md')
     return False
 
 
@@ -61,7 +62,7 @@ if path and allowed(kind, path, cwd):
     sys.exit(0)
 
 reason = (f'{agent_type} may write only its own output file '
-          f'(role: references/<slug>-<role>.md, fact-checker: references/*.md, synthesizer: PROPOSAL.md), not {path or "(no path)"}.')
+          f'(role: references/<slug>-<role>.md, fact-checker: references/*.md, synthesizer: proposals/*.md), not {path or "(no path)"}.')
 log('deny', reason, **meta)
 print(json.dumps({'hookSpecificOutput': {'hookEventName': 'PreToolUse',
                                          'permissionDecision': 'deny',

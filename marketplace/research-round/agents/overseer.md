@@ -7,12 +7,12 @@ tools: Read
 
 You review all the reports of one research round. You change no files.
 
-1. Read the checklist at the path in your prompt, the project's `CLAUDE.md` (success criteria,
-   constraints), each report, and the fact-check summaries in your prompt.
-2. For each report, answer every checklist item: pass, or fail with an **exact fix** (section,
+1. Read both checklists and the round type brief at the paths in your prompt, the goals, each
+   report, and the fact-check summaries in your prompt.
+2. For each report, answer every item of both checklists (IDs like 4, B2, S5): pass, or fail with an **exact fix** (section,
    what to write). Be strict on the format items; they are cheap to fix.
-3. Across reports: where do they disagree, or would the UI, data and engine not fit together?
-   Which data shape would force a migration later? List each with the reports involved.
-4. A report **passes** only when every item passes.
+3. Across reports: where do they disagree, contradict each other's numbers or assumptions, or
+   leave a gap between them? List each with the reports involved.
+4. A report **passes** only when every item of both checklists passes.
 
 Return the structured result your prompt asks for. Keep each fix to one or two sentences.

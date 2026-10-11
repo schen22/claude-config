@@ -1,13 +1,13 @@
-# PROPOSAL.md — template
+# Build proposal — template
 
 The synthesizer writes this from the role reports. It is the one thing Sarah reads first.
-Link each claim to the report it comes from (`references/<file>.md#section`). Don't repeat what
+Link each claim to the report it comes from (`../references/<file>.md#section`). Don't repeat what
 a report already says: decide, score and order.
 
 ```markdown
 # Proposal — <question>
 
-<date> · Round: <slug> · Reports: [role](references/<slug>-<role>.md), … · Status: **for review**
+<date> · Round: <slug> · Reports: [role](../references/<slug>-<role>.md), … · Status: **for review**
 
 ## TL;DR
 
@@ -20,9 +20,9 @@ a report already says: decide, score and order.
 
 ## Scorecard
 
-| Option / plan | SC1 | SC2 | … | Cost | Maintenance |
+| Option / plan | Goal 1 | Goal 2 | … | Cost | Maintenance |
 |---|---|---|---|---|---|
-(One cell per success criterion: ✓ / partial / ✗ plus a few words of reason, with links.)
+(One cell per goal / success criterion: ✓ / partial / ✗ plus a few words of reason, with links.)
 
 ## Recommended build order
 

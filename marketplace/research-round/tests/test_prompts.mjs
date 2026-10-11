@@ -11,7 +11,7 @@ const blocks = {}
 for (const [, name, body] of readFileSync(join(here, '../prompts.md'), 'utf8').matchAll(/^## (.+)\n[\s\S]*?```text\n([\s\S]*?)\n```/gm)) blocks[name] = body
 const fill = (name, v) => blocks[name].replace(/\{(\w+)\}/g, (m, k) => (k in v ? v[k] : m))
 
-const sent = {}
+let sent = {}
 const agent = async (prompt, o) => {
   sent[o.label] = prompt
   if (o.agentType.endsWith('fact-checker')) return { checked: 3, confirmed: 2, corrected: [{ claim: 'c', fix: 'f' }], unverified: [], numbersRecomputed: 1 }
@@ -22,10 +22,20 @@ const agent = async (prompt, o) => {
 const parallel = fs => Promise.all(fs.map(f => f()))
 const quiet = () => {}
 
-const args = { question: 'Q?', slug: 'sl', roles: ['ux-researcher', 'data-scientist'], projectRoot: '/p', pluginRoot: '/x', date: '2026-10-10' }
+let fails = 0
+const check = (name, ok, detail = '') => { fails += !ok; console.log(`${ok ? 'ok  ' : 'FAIL'} ${name}${ok ? '' : '  ' + detail}`) }
+let total = 0
+const compare = (label, want) => {
+  total += 1
+  const got = sent[label]
+  const at = got ? [...want].findIndex((c, i) => c !== got[i]) : -1
+  check(`prompt ${label}`, got === want, got ? `differs at char ${at}: ${JSON.stringify(want.slice(at, at + 40))} vs ${JSON.stringify(got.slice(at, at + 40))}` : 'not sent')
+}
+
+const args = { question: 'Q?', slug: 'sl', type: 'build', roles: ['ux-researcher', 'data-scientist'], goals: '/p/CLAUDE.md § Success criteria', projectRoot: '/p', pluginRoot: '/x', date: '2026-10-10' }
 const result = await runWorkflow(args, agent, parallel, quiet, quiet)
 
-const v = { root: '/p', plugin: '/x', question: 'Q?', date: '2026-10-10', slug: 'sl' }
+const v = { root: '/p', plugin: '/x', question: 'Q?', date: '2026-10-10', slug: 'sl', type: 'build', goals: args.goals, typeDir: '/x/types/build', proposal: '/p/proposals/sl.md' }
 const out = r => `/p/references/sl-${r}.md`
 const reportList = args.roles.map(r => `- ${r}: ${out(r)}`).join('\n')
 const factSummary = args.roles.map(r => `${r}: 3 checked, 2 confirmed, 1 corrected, 0 unverified, 1 numbers recomputed`).join('\n')
@@ -39,17 +49,28 @@ const expected = {
   synthesis: fill('Synthesis', { ...v, reportList, factSummary, crossList: '- units differ (ux-researcher, data-scientist)' }),
 }
 
-let fails = 0
-const check = (name, ok, detail = '') => { fails += !ok; console.log(`${ok ? 'ok  ' : 'FAIL'} ${name}${ok ? '' : '  ' + detail}`) }
-for (const [label, want] of Object.entries(expected)) {
-  const got = sent[label]
-  const at = got ? [...want].findIndex((c, i) => c !== got[i]) : -1
-  check(`prompt ${label}`, got === want, got ? `differs at char ${at}: ${JSON.stringify(want.slice(at, at + 40))} vs ${JSON.stringify(got.slice(at, at + 40))}` : 'not sent')
-}
+for (const [label, want] of Object.entries(expected)) compare(label, want)
+total += 2
 check('no unexpected agents', Object.keys(sent).length === Object.keys(expected).length, Object.keys(sent).join(','))
 check('stats: 7 agents, 1 fix pass', result.stats.agents === 7 && result.stats.fixPasses === 1, JSON.stringify(result.stats))
-const bad = await runWorkflow({ question: 'q', slug: 'Bad Slug', roles: ['nope'], projectRoot: 'rel', pluginRoot: '/x' }, agent, parallel, quiet, quiet)
-check('bad args rejected', bad.started === false && bad.problems.length === 3, JSON.stringify(bad.problems))
 
-console.log(`\n${Object.keys(expected).length + 3 - fails}/${Object.keys(expected).length + 3} passed`)
+// Strategy round: type paths reach every prompt; roles outside the overseer stub still run.
+sent = {}
+const sArgs = { ...args, type: 'strategy', roles: ['competitive-analyst', 'staff-software-engineer'], goals: 'G1 grow revenue; G2 enter EU' }
+const sv = { ...v, type: 'strategy', goals: sArgs.goals, typeDir: '/x/types/strategy' }
+const sOut = r => `/p/references/sl-${r}.md`
+const sResult = await runWorkflow(sArgs, agent, parallel, quiet, quiet)
+compare('research:competitive-analyst', fill('Research', { ...sv, output: sOut('competitive-analyst') }))
+compare('research:staff-software-engineer', fill('Research', { ...sv, output: sOut('staff-software-engineer') }))
+compare('synthesis', fill('Synthesis', { ...sv, reportList: sArgs.roles.map(r => `- ${r}: ${sOut(r)}`).join('\n'), factSummary: sArgs.roles.map(r => `${r}: 3 checked, 2 confirmed, 1 corrected, 0 unverified, 1 numbers recomputed`).join('\n'), crossList: '- units differ (ux-researcher, data-scientist)' }))
+total += 1
+check('strategy result type', sResult.type === 'strategy', sResult.type)
+
+total += 2
+const bad = await runWorkflow({ question: 'q', slug: 'Bad Slug', type: 'plan', roles: ['nope'], projectRoot: 'rel', pluginRoot: '/x' }, agent, parallel, quiet, quiet)
+check('bad args rejected', bad.started === false && bad.problems.length === 5, JSON.stringify(bad.problems))
+const noGoals = await runWorkflow({ ...args, goals: '' }, agent, parallel, quiet, quiet)
+check('missing goals rejected', noGoals.started === false && /goals/.test(noGoals.problems.join()), JSON.stringify(noGoals.problems))
+
+console.log(`\n${total - fails}/${total} passed`)
 process.exit(fails ? 1 : 0)

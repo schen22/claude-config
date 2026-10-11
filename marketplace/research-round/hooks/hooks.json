@@ -1,5 +1,5 @@
 {
-  "description": "research-round agents may write only their own output file: a role its references/<slug>-<role>.md, the fact-checker a references/*.md, the synthesizer PROPOSAL.md.",
+  "description": "research-round agents may write only their own output file: a role its references/<slug>-<role>.md, the fact-checker a references/*.md, the synthesizer proposals/<slug>.md.",
   "hooks": {
     "PreToolUse": [
       {

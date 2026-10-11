@@ -7,8 +7,11 @@ fails if this file and the workflow drift apart.
 | Placeholder | Value |
 |---|---|
 | `{root}` · `{plugin}` | project root · plugin root (absolute) |
-| `{question}` · `{date}` · `{slug}` | as given in preflight |
+| `{question}` · `{date}` · `{slug}` · `{type}` | as set in preflight (`{type}`: `build` or `strategy`) |
+| `{goals}` | where the goals are, or the goals themselves (from preflight) |
+| `{typeDir}` | `{plugin}/types/{type}` |
 | `{output}` | `{root}/references/{slug}-{role}.md` |
+| `{proposal}` | `{root}/proposals/{slug}.md` |
 | `{report}` | one report's path |
 | `{reportList}` | one line per report: `- {role}: {path}` |
 | `{factSummary}` | one line per report: `{role}: {checked} checked, {confirmed} confirmed, {corrected} corrected, {unverified} unverified, {numbers} numbers recomputed` (or `{role}: NOT fact-checked (agent failed)`) |
@@ -20,14 +23,15 @@ fails if this file and the workflow drift apart.
 `subagent_type: research-round:{role}`, one per role, all in one message.
 
 ```text
-Research round in the project at {root}.
+Research round (type: {type}) in the project at {root}.
 
 Question: {question}
 Date: {date}
+Goals to map every option to: {goals}
 Your output file (write only this one): {output}
+Round type brief: {typeDir}/brief.md
 Report template and rules: {plugin}/report-template.md
-Checklist (check your report against it before returning): {plugin}/checklist.md
-Project brief with the success criteria: {root}/CLAUDE.md
+Checklists (check your report against both before returning): {plugin}/checklist.md and {typeDir}/checklist.md
 ```
 
 ## Fix
@@ -56,14 +60,16 @@ Project root (for project-file sources): {root}
 ## Oversee
 
 `subagent_type: research-round:overseer`, one. Ask for, per role: pass (true/false) and fixes
-(`item`, `fix`); and cross-role issues (`issue`, `roles`).
+(`item` ID such as 4, B2, S5; `fix`); and cross-role issues (`issue`, `roles`).
 
 ```text
 Review the reports of one research round.
 
+Round type: {type}
 Question: {question}
-Checklist: {plugin}/checklist.md
-Project brief with the success criteria: {root}/CLAUDE.md
+Goals: {goals}
+Round type brief: {typeDir}/brief.md
+Checklists (answer both for every report): {plugin}/checklist.md and {typeDir}/checklist.md
 Reports (role: path):
 {reportList}
 
@@ -85,9 +91,11 @@ Write the proposal for this research round.
 Question: {question}
 Date: {date}
 Round slug: {slug}
-Your output file (write only this one): {root}/PROPOSAL.md
-Proposal template: {plugin}/proposal-template.md
-Project brief with the success criteria: {root}/CLAUDE.md
+Round type: {type}
+Goals: {goals}
+Your output file (write only this one): {proposal}
+Round type brief: {typeDir}/brief.md
+Proposal template: {typeDir}/proposal-template.md
 Reports (role: path):
 {reportList}
 
