@@ -68,7 +68,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "CLAUDE_HOOK_MODE=log python3 -S ~/.claude/hooks/helper-guard.py",
+            "command": "CLAUDE_HOOK_MODE=enforce python3 -S ~/.claude/hooks/helper-guard.py",
             "timeout": 10
           }
         ]

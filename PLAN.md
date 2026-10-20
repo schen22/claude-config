@@ -58,7 +58,7 @@ the ~24–35k starting context is Claude Code's own system prompt and tools):
 | Hook | Event | Mode | What |
 |---|---|---|---|
 | `brief-check.py` | PreToolUse `Agent` | log | Helper brief follows the `delegate` template; opus/fable needs a reason |
-| `helper-guard.py` | PreToolUse Bash/Read/Edit/Write/NotebookEdit, subagents only | log | 150k budget → wrap up; raw test runs → gate; no images |
+| `helper-guard.py` | PreToolUse Bash/Read/Edit/Write/NotebookEdit, subagents only | enforce | 150k budget → wrap up; raw test runs → gate; no images |
 | `usage-ledger.py` | SubagentStop | always on | One row per helper in `logs/agents.jsonl` |
 | `research-round` `write-scope.py` | PreToolUse Write/Edit, `research-round:*` agents only | enforce | Role → its `references/<slug>-<role>.md`; fact-checker → `references/*.md`; synthesizer → `PROPOSAL.md` |
 | `hook-review.py` | SessionStart | always on | From the date in `hooks/REVIEW_DUE`, asks for the hook review each session until done |
@@ -223,6 +223,9 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - 2026-10-10 · Never a bare ID in docs or replies: name first, ID in parentheses, linked (Sarah,
   wibey-case). Added to `~/.claude/CLAUDE.md` § How we work and research-round 0.5.2 (report
   rule 6, checklist 3, synthesizer).
+- 2026-10-20 · Hook review (158 decisions, 2026-09-28 → 10-12): `helper-guard` switched to enforce
+  (Sarah); all 24 would-denies were images. Backup: `backups/settings.json.2026-10-20-pre-helper-guard`.
+  `brief-check` still log, decision pending; `REVIEW_DUE` stays until it is decided.
 
 ## Lessons
 
