@@ -24,8 +24,9 @@ Findings only. Which ones to act on is Sarah's call, recorded in the project's
 
 Build to a scratch dir and use the project's browser test helpers (Puppeteer) to read
 **computed values** at 375, 768 and 1280px: header height, overflow, font sizes, spacing
-between blocks, target sizes, contrast of each text/background pair. Screenshots only to
-confirm a specific finding, at most 3, never pasted into the report.
+between blocks, target sizes, contrast of each text/background pair. No screenshots or
+image reads (`helper-guard` blocks them): report computed values, and name the pages and
+widths for Sarah to look at.
 
 ## Lenses
 
