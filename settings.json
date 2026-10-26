@@ -54,16 +54,6 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Agent",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "CLAUDE_HOOK_MODE=log python3 -S ~/.claude/hooks/brief-check.py",
-            "timeout": 10
-          }
-        ]
-      },
-      {
         "matcher": "Bash|Read|Edit|Write|NotebookEdit",
         "hooks": [
           {

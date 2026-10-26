@@ -10,25 +10,8 @@ tmp = tempfile.mkdtemp()
 ENV = dict(os.environ, CLAUDE_HOOK_MODE='enforce', CLAUDE_HOOK_LOG=f'{tmp}/hooks.jsonl',
            CLAUDE_AGENT_LEDGER=f'{tmp}/agents.jsonl')
 
-GOOD = """## Goal
-Item 6: rewrite the theme toggle.
-## Owns
-src/_includes/header.liquid, public/assets/js/site.js
-## Snippets
---rule: #d9c7a3; toggle uses aria-pressed; JS budget 50 lines.
-## Gate
-npm run gate:fast while iterating; npm run gate before commit.
-## Report
-<= 15 lines.
-"""
 CASES = [
     # (name, hook, event, expect_deny)
-    ('good brief', 'brief-check', {'tool_input': {'subagent_type': 'general-purpose', 'prompt': GOOD, 'model': 'sonnet'}}, False),
-    ('empty Snippets', 'brief-check', {'tool_input': {'prompt': GOOD.replace('--rule: #d9c7a3; toggle uses aria-pressed; JS budget 50 lines.', '')}}, True),
-    ('pointer brief', 'brief-check', {'tool_input': {'subagent_type': 'general-purpose', 'prompt': 'Read CLAUDE.md and PLAN.md, then do item 6.'}}, True),
-    ('opus without reason', 'brief-check', {'tool_input': {'prompt': GOOD, 'model': 'opus'}}, True),
-    ('read-only research', 'brief-check', {'tool_input': {'prompt': '## Read-only\n## Goal\nFind X.\n## Report\n5 lines.'}}, False),
-    ('custom agent skipped', 'brief-check', {'tool_input': {'subagent_type': 'Explore', 'prompt': 'find foo'}}, False),
     ('main session untouched', 'helper-guard', {'tool_name': 'Bash', 'tool_input': {'command': 'npm test'}}, False),
     ('helper raw npm test', 'helper-guard', {'agent_id': 'x', 'cwd': os.path.expanduser('~/Documents/projects/sarahs-corner'), 'tool_name': 'Bash', 'tool_input': {'command': 'npm test 2>&1 | tail -100'}}, True),
     ('helper single test', 'helper-guard', {'agent_id': 'x', 'cwd': os.path.expanduser('~/Documents/projects/sarahs-corner'), 'tool_name': 'Bash', 'tool_input': {'command': 'node --test --test-name-pattern "toggle" test/interaction.test.js'}}, False),
