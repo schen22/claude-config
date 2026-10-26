@@ -12,8 +12,8 @@ Status sections are rewritten in place. **Decisions** and **Lessons** are append
    plugin descriptions. The `hook-review` hook stays silent until a review is due.
 2. **Plan, then wait.** Plan table and open questions → Sarah confirms → execute.
 3. **Delegate?** Load `delegate` → inline, or one fresh helper per task → fill in the
-   brief template. `brief-check` checks the brief. `helper-guard` watches the helper
-   (context budget, raw test runs, images). `usage-ledger` logs its cost when it stops.
+   brief template (read-only variant for reviews and research). `helper-guard` watches the
+   helper (context budget, raw test runs, images). `usage-ledger` logs its cost when it stops.
 4. **Before each commit.** `review-gates` + the project's `review-workflow` →
    `npm run gate` → `commit` + the project's `commit-workflow`.
 5. **End of session.** Update the project `PLAN.md`. Sort each lesson with the ladder:
@@ -39,7 +39,7 @@ the ~24–35k starting context is Claude Code's own system prompt and tools):
 
 | Skill | ~Tokens | Job |
 |---|---|---|
-| `delegate` | 750 | Inline vs helper, brief template |
+| `delegate` | 910 | Inline vs helper, brief template (+ read-only variant) |
 | `review-gates` | 470 | Gates 0–2, models |
 | `commit` | 700 | Branches, one thing per commit, message shape, peer-session + clean-HEAD gate |
 | `retro` | 430 (+ scan output) | Monthly review of the setup |
@@ -57,9 +57,8 @@ the ~24–35k starting context is Claude Code's own system prompt and tools):
 
 | Hook | Event | Mode | What |
 |---|---|---|---|
-| `brief-check.py` | PreToolUse `Agent` | log | Helper brief follows the `delegate` template; opus/fable needs a reason |
 | `helper-guard.py` | PreToolUse Bash/Read/Edit/Write/NotebookEdit, subagents only | enforce | 150k budget → wrap up; raw test runs → gate; no images |
-| `usage-ledger.py` | SubagentStop | always on | One row per helper in `logs/agents.jsonl` |
+| `usage-ledger.py` | SubagentStop | always on | One row per helper stop in `logs/agents.jsonl` (task description, steps, tokens); a resumed helper gets one row per stop, running totals |
 | `research-round` `write-scope.py` | PreToolUse Write/Edit, `research-round:*` agents only | enforce | Role → its `references/<slug>-<role>.md`; fact-checker → `references/*.md`; synthesizer → `PROPOSAL.md` |
 | `hook-review.py` | SessionStart | always on | From the date in `hooks/REVIEW_DUE`, asks for the hook review each session until done |
 
@@ -226,6 +225,18 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - 2026-10-20 · Hook review (158 decisions, 2026-09-28 → 10-12): `helper-guard` switched to enforce
   (Sarah); all 24 would-denies were images. Backup: `backups/settings.json.2026-10-20-pre-helper-guard`.
   `brief-check` still log, decision pending; `REVIEW_DUE` stays until it is decided.
+- 2026-10-26 · Hook review closed: `brief-check` removed (Sarah). In the trial, the `delegate` skill
+  was loaded before all 29 launches; the hook never changed a brief (log only); its 23
+  would-denies flagged heading names (13 read-only helpers, 6 briefs with context under other
+  headings, 3 Opus runs Sarah chose). No outcome showed compliant briefs did better. Its rules
+  moved into the `delegate` template: read-only variant, Snippets by content, Opus/Fable reason.
+  Backups: `backups/removed-2026-10-20/`, `backups/settings.json.2026-10-20-pre-brief-check-removal`.
+  No hook runs in log mode now, so `hook-review` is silent until the next trial.
+- 2026-10-26 · Same review of the other hooks (Sarah): `helper-guard` kept as is (budget and
+  raw-test rules never fired; images 24× from 2 slide reviews); `design-review` no longer allows
+  screenshots, to match it. `usage-ledger` rows carry the task description; the `retro` scan
+  counts each helper once (rows are running totals: 107 rows, 87 helpers). `write-scope` and
+  `hook-review` kept.
 
 ## Lessons
 
@@ -233,6 +244,9 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   (the walmart memory, `gate0.sh`).
 - A rule in a skill only works if the skill is loaded when the decision is made. Rules
   that matter get a hook.
+- …but a hook that repeats a skill's template adds nothing when the skill is loaded:
+  `brief-check` flagged 23 of 29 briefs although `delegate` was loaded every time (removed
+  2026-10-26). Before adding a hook for a skill's rule, check that the skill is really skipped.
 - `CLAUDE.md` loads at launch; running sessions must be told to re-read it. Skills,
   settings and hooks reload live.
 - Helper cost ≈ context size × steps; a helper starts at ~25–35k before reading anything.
