@@ -38,8 +38,9 @@ Paste, don't point. The helper reads nothing beyond this brief and the files it 
 <files / regions it may change; nothing else>
 
 ## Snippets
-<pasted excerpts it needs — tokens, rules from CLAUDE.md / design docs, the current
-code to change. Aim ≤ ~3k tokens. No "read CLAUDE.md" / "read docs/…".>
+<pasted excerpts it needs — the current code to change, the rules that apply (tokens,
+CLAUDE.md, design docs, source tiers), a sample of the expected output. Aim ≤ ~3k tokens.
+Any heading works (`## Rules`, `## Rows`). No "read CLAUDE.md" / "read docs/…".>
 
 ## Gate
 - While iterating: <fast gate, e.g. npm run gate:fast>
@@ -57,7 +58,11 @@ Commits (hash + subject), git diff --stat, gate result, what's left, anything Sa
 must look at. No logs.
 ```
 
-Pass `model: "sonnet"` (or `"haiku"` for purely mechanical edits).
+**Read-only helpers** (reviews, research, ratings — nothing to commit): start with
+`## Read-only`, then only Goal, Snippets and Report. No Owns or Gate.
+
+Pass `model: "sonnet"` (or `"haiku"` for purely mechanical edits). For `opus` or `fable`,
+add `## Why this model`: "Sarah asked", or the judgement only that model can make.
 
 ## While it runs
 
