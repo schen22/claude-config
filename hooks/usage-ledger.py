@@ -29,9 +29,16 @@ except OSError:
 if not reqs:
     sys.exit(0)
 
+# The task description lives beside the transcript; keep it so a row still says what the
+# helper did after transcripts are cleaned up.
+try:
+    desc = json.load(open(path[:-len('.jsonl')] + '.meta.json')).get('description', '')
+except (OSError, ValueError):
+    desc = ''
+
 ctx = [c for c, _ in reqs.values()]
 row = dict(ts=time.strftime('%Y-%m-%dT%H:%M:%S'), project=os.path.basename(ev.get('cwd', '')),
-           agent_type=ev.get('agent_type'), agent_id=ev.get('agent_id'), model=model,
+           agent_type=ev.get('agent_type'), agent_id=ev.get('agent_id'), desc=desc, model=model,
            steps=len(ctx), first_k=ctx[0] // 1000, peak_k=max(ctx) // 1000,
            processed_k=sum(ctx) // 1000, output_k=sum(o for _, o in reqs.values()) // 1000)
 os.makedirs(os.path.dirname(LEDGER), exist_ok=True)

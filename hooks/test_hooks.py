@@ -40,5 +40,19 @@ if lane_h:
                          input=json.dumps({'agent_transcript_path': lane_h[0], 'agent_type': 'general-purpose', 'cwd': '/x/sarahs-corner'}))
     print('ledger row:', open(f'{tmp}/agents.jsonl').read().strip() if os.path.exists(f'{tmp}/agents.jsonl') else out.stderr)
 
+# Ledger row carries the task description from the transcript's .meta.json.
+tr = f'{tmp}/agent-t1.jsonl'
+with open(tr, 'w') as f:
+    f.write(json.dumps({'requestId': 'r1', 'message': {'model': 'm', 'usage': {'input_tokens': 30000, 'output_tokens': 10}}}) + '\n')
+json.dump({'description': 'Verify ledger row M-16'}, open(f'{tmp}/agent-t1.meta.json', 'w'))
+ledger = f'{tmp}/agents-desc.jsonl'
+subprocess.run([sys.executable, '-S', f'{HERE}/usage-ledger.py'], env=dict(ENV, CLAUDE_AGENT_LEDGER=ledger),
+               input=json.dumps({'agent_transcript_path': tr, 'agent_id': 't1', 'cwd': '/x/p'}), capture_output=True, text=True)
+row = json.loads(open(ledger).read()) if os.path.exists(ledger) else {}
+ok = row.get('desc') == 'Verify ledger row M-16' and row.get('first_k') == 30
+CASES.append(('ledger row has desc', 'usage-ledger', {}, None))
+fails += not ok
+print(f"{'ok  ' if ok else 'FAIL'} {'usage-ledger':13} ledger row has desc" + ('' if ok else f'  {row}'))
+
 print(f'\n{len(CASES) - fails}/{len(CASES)} passed')
 sys.exit(1 if fails else 0)
