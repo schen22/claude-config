@@ -65,8 +65,10 @@ print(subprocess.run([sys.executable, f'{HOME}/hooks/hook-review.py'],
 print('\n## Costliest helpers (usage ledger)')
 ledger = f'{HOME}/logs/agents.jsonl'
 rows = [json.loads(l) for l in open(ledger)] if os.path.exists(ledger) else []
+# A resumed helper stops more than once; its rows are running totals, so keep its last.
+rows = list({r.get('agent_id') or i: r for i, r in enumerate(rows)}.values())
 for r in sorted(rows, key=lambda r: -r['processed_k'])[:5]:
     print(f"  {r['ts'][:10]} {r['project']}: {r['agent_type']} {r['model']} · {r['steps']} steps · "
-          f"peak {r['peak_k']}k · {r['processed_k']}k processed")
+          f"peak {r['peak_k']}k · {r['processed_k']}k processed" + (f" · {r['desc']}" if r.get('desc') else ''))
 if not rows:
     print('  No helpers logged yet.')
