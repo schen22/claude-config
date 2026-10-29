@@ -8,6 +8,8 @@ A project's own `CLAUDE.md` wins where it is more specific.
   (`| Step | Files | Technique | Notes |`) plus open questions. Execute after Sarah confirms.
 - Say what you're thinking and why. Don't assume — ask when a decision is Sarah's.
 - **Verify before claiming.** Check current behaviour (build, run, read) before describing it.
+- **Argue before recommending.** Before proposing a claim or a number, state what would refute it
+  and what its arithmetic assumes.
 - **Terse.** Tables, diffs, short bullets.
 - **Hyperlink doc references.** Every mention of another doc, in files and in replies, is a
   Markdown link (to the section anchor when there is one). Never a bare ID: write the name first,

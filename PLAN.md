@@ -222,6 +222,8 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - 2026-10-10 · Never a bare ID in docs or replies: name first, ID in parentheses, linked (Sarah,
   wibey-case). Added to `~/.claude/CLAUDE.md` § How we work and research-round 0.5.2 (report
   rule 6, checklist 3, synthesizer).
+- 2026-10-13 · From wibey-case: "Argue before recommending" added to `~/.claude/CLAUDE.md` §
+  How we work; block-level Keep / Clarify / Cut review added to `review-gates` (Sarah).
 - 2026-10-20 · Hook review (158 decisions, 2026-09-28 → 10-12): `helper-guard` switched to enforce
   (Sarah); all 24 would-denies were images. Backup: `backups/settings.json.2026-10-20-pre-helper-guard`.
   `brief-check` still log, decision pending; `REVIEW_DUE` stays until it is decided.
@@ -291,3 +293,6 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   sets metrics or projections.
 - A synthesis given an earlier proposal as background wrote a diff on it (wibey-case A.2), so the
   old proposal couldn't be deleted. research-round 0.5.3: the proposal must stand alone.
+- Two retracted claims in one session (wibey-case 2026-10-13: "27× builder time", "11% with no
+  change to spend") cost extra rounds; each failed on an unstated assumption. Now a CLAUDE.md
+  rule; a project check script catches the mechanical slips (split tables, mixed terms).
