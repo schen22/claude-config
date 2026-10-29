@@ -86,10 +86,12 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
      end-of-session sentence; ffmpeg → ai-deep-dive Lessons (~265 tokens).
   2. Cut the Haiku fresh-eyes pass (`review-gates` step 5 + exception, `delegate` row); `delegate`
      review rows link to `review-gates`.
-  3. `/start` + `/end` skills (`disable-model-invocation: true` — check it exists). Notes: one line
-     per session in the project `PLAN.md` § Sessions; the retro reads them, then folds them into
-     Lessons/Decisions and deletes them, so the section holds one month (~20 lines). `scan.py`:
-     `--project --since` + a session-notes section.
+  3. `/start` + `/end` skills (`disable-model-invocation: true` — check it exists). Notes: one row
+     per session in `logs/sessions.jsonl` (central, keyed by cwd, like `agents.jsonl`). A
+     `SessionEnd` hook writes the facts (project, time, commits, helper tokens, hook denies; check
+     the event and its `cwd`/`session_id` first); `/end` adds goal, what went wrong, lessons to that
+     row; `/start` reads the folder's last row; the retro reads the file as its main evidence.
+     Lessons still go by the ladder. Local only (`logs/` is gitignored).
   4. `hook-review.py` → `due.py` + `hooks/DUE` (hook review and retro dates).
   5. Uninstall `claude-md-management` and `expert-review-panel` (Sarah: cut); `research-round`
      per project. Synced skills: off `import-memory`, `business-market-research`; `morning` only if
