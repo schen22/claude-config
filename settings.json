@@ -4,9 +4,9 @@
     "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet"
   },
   "enabledPlugins": {
-    "claude-md-management@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": false,
     "session-report@claude-plugins-official": true,
-    "research-round@sarah-config": true
+    "research-round@sarah-config": false
   },
   "extraKnownMarketplaces": {
     "sarah-config": {
