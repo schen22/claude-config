@@ -23,7 +23,7 @@ all of them on every step (lane H: 5 items, 202k peak, 15.4M tokens).
 | A task that owns files no one else touches | **One fresh helper per task (1–2 items).** Never more than 2 items per helper |
 | Several such tasks | Run them one after another; each brief pastes the previous report. Parallel only when they share no files |
 | Follow-up on a finished helper's work (a blocker, a small fix) | `SendMessage` the same helper (keeps its context) |
-| Review after each task | Orchestrator reads the diff inline (Gate 1 in `review-gates`) |
+| Review after each task | Orchestrator reads the diff inline, plus one Haiku fresh-eyes pass (Gate 1 in `review-gates`) |
 | Review by a separate helper | Only for risky tasks (JS behaviour, accessibility, security) and once per batch. Sonnet, diff only, blockers only, ≤ 10 lines |
 
 ## Brief template

@@ -28,6 +28,8 @@ output stays out of the orchestrator's context.
 3. Verdict `SHIP` / `BLOCKED` + ≤ 5 one-line findings.
 4. Blockers go back to the same helper via `SendMessage`. Should-fix → follow-up commit
    or a line in `PLAN.md` Next.
+5. Fresh eyes, one pass per lane or own commit, before integrating: one Haiku subagent, read-only, briefed
+   with the diff and the rules it touches only (no history). Blockers only, ≤ 10 lines. Not per edit.
 
 ## Gate 2 — whole batch, once (Sonnet subagent)
 
@@ -39,4 +41,5 @@ output stays out of the orchestrator's context.
 ## Models
 
 - Helpers and reviewers: Sonnet, passed explicitly. Orchestrator: briefs, Gate 1,
-  merges, docs — judgment only. No Haiku for implementation or review.
+  merges, docs — judgment only. No Haiku for implementation or review, except the one
+  fresh-eyes pass in Gate 1.

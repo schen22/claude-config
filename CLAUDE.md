@@ -12,6 +12,10 @@ A project's own `CLAUDE.md` wins where it is more specific.
 - **Hyperlink doc references.** Every mention of another doc, in files and in replies, is a
   Markdown link (to the section anchor when there is one). Never a bare ID: write the name first,
   the ID in parentheses, linked to its definition, e.g. [Repeated context (C2)](…#context).
+- **YAGNI, sized to the project.** Place each project between "quick and dirty" and "production grade"
+  (`planning` → Calibrating depth) and build only what that level and a named current need justify. Every
+  piece of work must be justifiable. Never expand scope without permission; do suggest scope improvements
+  when they make sense.
 
 ## State
 

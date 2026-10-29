@@ -237,6 +237,10 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   screenshots, to match it. `usage-ledger` rows carry the task description; the `retro` scan
   counts each helper once (rows are running totals: 107 rows, 87 helpers). `write-scope` and
   `hook-review` kept.
+- 2026-10-29 · Sarah's rules from greninja/snoozle: YAGNI sized to the project, no scope growth without
+  permission, suggest scope improvements, all work justifiable → `~/.claude/CLAUDE.md` § How we work (links
+  `planning` → Calibrating depth instead of repeating it). One Haiku fresh-eyes review pass per lane or own
+  commit → `review-gates` Gate 1 step 5 + `delegate` table; the "No Haiku for review" rule now excepts it.
 
 ## Lessons
 
