@@ -80,7 +80,18 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 -S ~/.claude/hooks/hook-review.py --session-start",
+            "command": "python3 -S ~/.claude/hooks/due.py --session-start",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -S ~/.claude/hooks/session-log.py",
             "timeout": 10
           }
         ]

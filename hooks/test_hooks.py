@@ -54,5 +54,33 @@ CASES.append(('ledger row has desc', 'usage-ledger', {}, None))
 fails += not ok
 print(f"{'ok  ' if ok else 'FAIL'} {'usage-ledger':13} ledger row has desc" + ('' if ok else f'  {row}'))
 
+# Session log: the SessionEnd row counts the transcript's tokens, and --last joins the /end note.
+slog, proj = f'{tmp}/sessions.jsonl', f'{tmp}/proj'
+os.makedirs(proj)
+tr = f'{tmp}/session.jsonl'
+with open(tr, 'w') as f:
+    f.write(json.dumps({'timestamp': '2020-01-01T00:00:00.000Z', 'requestId': 'r1',
+                        'message': {'usage': {'input_tokens': 5000, 'cache_read_input_tokens': 40000}}}) + '\n')
+SENV = dict(ENV, CLAUDE_SESSION_LOG=slog)
+run = lambda *a, **k: subprocess.run([sys.executable, '-S', f'{HERE}/session-log.py', *a], env=SENV,
+                                     cwd=proj, capture_output=True, text=True, **k)
+run('--note', '--goal', 'G1', '--wrong', 'none', '--lessons', 'none')
+run(input=json.dumps({'session_id': 's1', 'transcript_path': tr, 'cwd': proj, 'reason': 'exit'}))
+last = run('--last').stdout
+ok = 'main 45k' in last and 'goal: G1' in last and '1 with an /end note' in run('--since', '2000-01-01').stdout
+CASES.append(('session row + note', 'session-log', {}, None))
+fails += not ok
+print(f"{'ok  ' if ok else 'FAIL'} {'session-log':13} session row + note" + ('' if ok else f'  {last!r}'))
+
+# due.py: a past retro date is due; a hook-review date is silent with no log-mode hook.
+dfile = f'{tmp}/DUE'
+open(dfile, 'w').write('retro 2000-01-01\nhook-review 2000-01-01\n')
+out = subprocess.run([sys.executable, '-S', f'{HERE}/due.py', '--session-start'], input='{}', capture_output=True,
+                     text=True, env=dict(ENV, CLAUDE_DUE_FILE=dfile)).stdout
+ok = 'Retro due' in out and 'Hook review' not in out
+CASES.append(('retro due, hook review silent', 'due', {}, None))
+fails += not ok
+print(f"{'ok  ' if ok else 'FAIL'} {'due':13} retro due, hook review silent" + ('' if ok else f'  {out!r}'))
+
 print(f'\n{len(CASES) - fails}/{len(CASES)} passed')
 sys.exit(1 if fails else 0)

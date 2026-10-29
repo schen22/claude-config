@@ -58,7 +58,7 @@ for f in sorted(glob.glob(f'{HOME}/projects/*/memory/*.md')):
 
 # 3. Hooks: what they blocked or would have blocked.
 print('\n## Hooks')
-print(subprocess.run([sys.executable, f'{HOME}/hooks/hook-review.py'],
+print(subprocess.run([sys.executable, f'{HOME}/hooks/due.py', '--hooks'],
                      capture_output=True, text=True).stdout.rstrip())
 
 # 4. Helpers: the costliest finished subagents.
@@ -72,3 +72,9 @@ for r in sorted(rows, key=lambda r: -r['processed_k'])[:5]:
           f"peak {r['peak_k']}k · {r['processed_k']}k processed" + (f" · {r['desc']}" if r.get('desc') else ''))
 if not rows:
     print('  No helpers logged yet.')
+
+# 5. Sessions: one line each, facts from the SessionEnd hook plus the /end note.
+print('\n## Sessions (session log)')
+cutoff = time.strftime('%Y-%m-%dT%H:%M:%S', time.localtime(since_ms / 1000))
+print(subprocess.run([sys.executable, f'{HOME}/hooks/session-log.py', '--since', cutoff],
+                     capture_output=True, text=True).stdout.rstrip())

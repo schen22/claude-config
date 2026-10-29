@@ -14,7 +14,10 @@ Plan, then wait: this skill proposes. Nothing changes until Sarah agrees.
 
 ## Steps
 
-1. `python3 ~/.claude/skills/retro/scan.py` (add `--days N` to change the window).
+1. `python3 ~/.claude/skills/retro/scan.py` (add `--days N` to change the window). Its
+   **Sessions** section is the main evidence: one line per session (commits, tokens, helpers,
+   denies, and the `/end` note: goal, what went wrong, lessons). Fewer than half the sessions
+   with a note → `/end` isn't being run; raise it.
 2. For token usage by project, session and skill, run the `session-report` skill's analyzer
    in JSON mode and read only `overall`, `by_project` and `by_subagent_type`. Build the
    HTML report only if Sarah asks for it.
@@ -37,4 +40,5 @@ Rungs, strongest first (from `~/.claude/CLAUDE.md`): 1 script/test/hook · 2 tem
 ## After Sarah agrees
 
 Apply the changes, then update `~/.claude/PLAN.md`: inventory, status, a dated Decisions
-line and a Lessons line where something was learned. Set the next retro date in Now.
+line and a Lessons line where something was learned. Set the next retro date in
+`hooks/DUE` (`retro YYYY-MM-DD`); the SessionStart hook raises it when due.
