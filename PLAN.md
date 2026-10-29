@@ -79,11 +79,25 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 
 ## Now
 
-- First retro **2026-10-28**. Known candidates from the first scan:
-  - walmart `prioritization-working-style` (feedback memory) → `~/.claude/CLAUDE.md`?
-  - walmart `working-model-changes` → already in `delegate` / `review-gates`; delete.
-  - Weigh each rule added to `CLAUDE.md` / skills: cost (tokens, time, friction) vs. risk.
-    Demote heavy, low-priority checks or drop them (e.g. the every-image check, removed 2026-09-30).
+- **Retro 2026-10-29 (pruning) — resume 2026-10-30.** Agreed with Sarah; apply in this order,
+  one commit each:
+  1. `CLAUDE.md`: merge Say/ask → Plan, Verify → Argue, the two worktree bullets; shrink YAGNI to
+     one line; cut Cost ≈, Models, No screenshots, Websites, Commits and reviews, the
+     end-of-session sentence; ffmpeg → ai-deep-dive Lessons (~265 tokens).
+  2. Cut the Haiku fresh-eyes pass (`review-gates` step 5 + exception, `delegate` row); `delegate`
+     review rows link to `review-gates`.
+  3. `/start` + `/end` skills (`disable-model-invocation: true` — check it exists). Notes: one line
+     per session in the project `PLAN.md` § Sessions; the retro reads them, then folds them into
+     Lessons/Decisions and deletes them, so the section holds one month (~20 lines). `scan.py`:
+     `--project --since` + a session-notes section.
+  4. `hook-review.py` → `due.py` + `hooks/DUE` (hook review and retro dates).
+  5. Uninstall `claude-md-management` and `expert-review-panel` (Sarah: cut); `research-round`
+     per project. Synced skills: off `import-memory`, `business-market-research`; `morning` only if
+     unused in chat.
+  6. `planning`: diff its Calibrating depth against `working-model` archetypes; if they match,
+     cut `planning` and point YAGNI at `working-model`.
+  7. Walmart memories: delete `working-model-changes`; read `prioritization-working-style`, move up or delete.
+  8. Update this file (inventory, Decisions incl. Keep / Clarify / Cut dropped, Lessons); next retro 2026-11-28.
 
 ## Next
 
