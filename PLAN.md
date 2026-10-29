@@ -9,47 +9,46 @@ Status sections are rewritten in place. **Decisions** and **Lessons** are append
 ## Workflow
 
 1. **Session start.** Loaded: `~/.claude/CLAUDE.md`, the project `CLAUDE.md`, skill and
-   plugin descriptions. The `hook-review` hook stays silent until a review is due.
+   plugin descriptions. `due.py` raises the retro or hook review when due. `/start`: last
+   session here, this session's goal, what's due.
 2. **Plan, then wait.** Plan table and open questions → Sarah confirms → execute.
 3. **Delegate?** Load `delegate` → inline, or one fresh helper per task → fill in the
    brief template (read-only variant for reviews and research). `helper-guard` watches the
    helper (context budget, raw test runs, images). `usage-ledger` logs its cost when it stops.
 4. **Before each commit.** `review-gates` + the project's `review-workflow` →
    `npm run gate` → `commit` + the project's `commit-workflow`.
-5. **End of session.** Update the project `PLAN.md`. Sort each lesson with the ladder:
-   project-specific → project `CLAUDE.md`; every project → `~/.claude` (+ a line here).
-   `/revise-claude-md` can suggest candidates.
-6. **Monthly.** `retro` → proposals → Sarah agrees → apply → update this file.
+5. **End of session.** `/end`: what went wrong, lessons sorted with the ladder, project
+   `PLAN.md` updated, a note saved. On exit `session-log` records the facts.
+6. **Monthly.** `retro` (session log first) → proposals → Sarah agrees → apply → update this file.
 
 ## What's in context
 
-**Always loaded — every session and every subagent** (~4.0k tokens of ours; the rest of
-the ~24–35k starting context is Claude Code's own system prompt and tools):
+**Always loaded — every session and every subagent** (~3.8k tokens of ours, down from ~5.1k
+before the 2026-10-29 retro; the rest of the ~24–35k starting context is Claude Code's own
+system prompt and tools):
 
 | Item | ~Tokens |
 |---|---|
-| `~/.claude/CLAUDE.md` | 730 |
-| Descriptions of 10 user skills | 1,150 |
-| Descriptions of 12 synced skills (`anthropic-skills:*`, from claude.ai) | 2,220 |
-| Plugins: `claude-md-management` 177, `session-report` 72 | 250 |
-| `research-round` plugin, once installed (9 agent + 1 skill + 1 workflow descriptions) | ~470 |
+| `~/.claude/CLAUDE.md` | 680 |
+| Descriptions of 8 user skills (`start` / `end` load nowhere: `disable-model-invocation`) | 800 |
+| Descriptions of 12 synced skills (`anthropic-skills:*`, from claude.ai) | 2,230 |
+| Plugin `session-report` | 72 |
+| `research-round` plugin — only in food-planner and interviews/wibey-case (`.claude/settings.local.json`) | ~470 there |
 | Project `CLAUDE.md` (per project) | 800–1,300 |
 
 **Loaded only when used:**
 
 | Skill | ~Tokens | Job |
 |---|---|---|
-| `delegate` | 910 | Inline vs helper, brief template (+ read-only variant) |
-| `review-gates` | 470 | Gates 0–2, models |
+| `start` / `end` | 130 / 190 | Session start (last note, goal, due) / end (lessons, note) |
+| `delegate` | 880 | Inline vs helper, brief template (+ read-only variant) |
+| `review-gates` | 510 | Gates 0–2, the only home for reviewer and model rules |
 | `commit` | 700 | Branches, one thing per commit, message shape, peer-session + clean-HEAD gate |
-| `retro` | 430 (+ scan output) | Monthly review of the setup |
+| `retro` | 510 (+ scan output) | Monthly review of the setup |
 | `design-review` | ~700 | Read-only design + brand review of a site, findings table |
 | `web-kit` | ~600 | New site from the starter; add/update header + theme toggle |
 | `review` | 2,270 | Full engineering review (Gate 2) |
-| `expert-review-panel` | 1,690 | Only when Sarah asks |
-| `planning` | 2,920 | New project or feature spec |
-| `working-model` | 1,880 | Right-size docs and oversight |
-| `claude-md-improver` / `revise-claude-md` | 2,200 / 500 | CLAUDE.md audit / session learnings |
+| `working-model` | 2,030 | Right-size docs, oversight and stakes (took `planning`'s calibration) |
 | `session-report` | 1,100 | Token usage report |
 | `research-round` | ~970 skill + ~1,300 templates (read by its agents) | `/research-round <question>` → role reports + `PROPOSAL.md` |
 
@@ -60,10 +59,11 @@ the ~24–35k starting context is Claude Code's own system prompt and tools):
 | `helper-guard.py` | PreToolUse Bash/Read/Edit/Write/NotebookEdit, subagents only | enforce | 150k budget → wrap up; raw test runs → gate; no images |
 | `usage-ledger.py` | SubagentStop | always on | One row per helper stop in `logs/agents.jsonl` (task description, steps, tokens); a resumed helper gets one row per stop, running totals |
 | `research-round` `write-scope.py` | PreToolUse Write/Edit, `research-round:*` agents only | enforce | Role → its `references/<slug>-<role>.md`; fact-checker → `references/*.md`; synthesizer → `PROPOSAL.md` |
-| `hook-review.py` | SessionStart | always on | From the date in `hooks/REVIEW_DUE`, asks for the hook review each session until done |
+| `due.py` | SessionStart | always on | Dates in `hooks/DUE` (`retro`, `hook-review`); raises each when due (hook review only while a hook runs in log mode) |
+| `session-log.py` | SessionEnd | always on | One row per session in `logs/sessions.jsonl`: commits, main + helper tokens, hook denies; `/end` adds goal, wrong, lessons |
 
 Settings: `CLAUDE_CODE_SUBAGENT_MODEL=sonnet`. Tests: `python3 hooks/test_hooks.py`.
-Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
+Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`, `logs/sessions.jsonl` (local only). Backups: `backups/`.
 
 ## Who does what
 
@@ -71,7 +71,7 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 |---|---|---|---|
 | Approve plans, commits, deletions, installs | Decides | Proposes | Always |
 | Retro | Asks for it, approves | Runs `retro`, proposes, applies, updates this file | Monthly |
-| End-of-session lessons | Approves | Sorts with the ladder | Every session |
+| End-of-session lessons | Runs `/end`, approves | Sorts with the ladder, saves the note | Every session |
 | After editing a hook | — | Runs `test_hooks.py` | On change |
 | Plugins | Decides | Checks cost with `claude plugin details` | As needed |
 | Visual sign-off | Decides | Points at the pages | Every visual change |
@@ -79,27 +79,17 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 
 ## Now
 
-- **Retro 2026-10-29 (pruning) — resume 2026-10-30.** Agreed with Sarah; apply in this order,
-  one commit each:
-  1. `CLAUDE.md`: merge Say/ask → Plan, Verify → Argue, the two worktree bullets; shrink YAGNI to
-     one line; cut Cost ≈, Models, No screenshots, Websites, Commits and reviews, the
-     end-of-session sentence; ffmpeg → ai-deep-dive Lessons (~265 tokens).
-  2. Cut the Haiku fresh-eyes pass (`review-gates` step 5 + exception, `delegate` row); `delegate`
-     review rows link to `review-gates`.
-  3. `/start` + `/end` skills (`disable-model-invocation: true` — check it exists). Notes: one row
-     per session in `logs/sessions.jsonl` (central, keyed by cwd, like `agents.jsonl`). A
-     `SessionEnd` hook writes the facts (project, time, commits, helper tokens, hook denies; check
-     the event and its `cwd`/`session_id` first); `/end` adds goal, what went wrong, lessons to that
-     row; `/start` reads the folder's last row; the retro reads the file as its main evidence.
-     Lessons still go by the ladder. Local only (`logs/` is gitignored).
-  4. `hook-review.py` → `due.py` + `hooks/DUE` (hook review and retro dates).
-  5. Uninstall `claude-md-management` and `expert-review-panel` (Sarah: cut); `research-round`
-     per project. Synced skills: off `import-memory`, `business-market-research`; `morning` only if
-     unused in chat.
-  6. `planning`: diff its Calibrating depth against `working-model` archetypes; if they match,
-     cut `planning` and point YAGNI at `working-model`.
-  7. Walmart memories: delete `working-model-changes`; read `prioritization-working-style`, move up or delete.
-  8. Update this file (inventory, Decisions incl. Keep / Clarify / Cut dropped, Lessons); next retro 2026-11-28.
+- **Sarah, after the 2026-10-29 retro:**
+  - claude.ai → Skills: turn off `import-memory`, `business-market-research`, and `morning` if
+    unused in chat (~260–350 always-loaded tokens).
+  - walmart `prioritization-working-style` memory: keep it there, or fold "challenge Sarah's
+    assumptions when the evidence disagrees" into `CLAUDE.md` § Argue (~10 tokens) and delete it.
+  - Run `/end` before exiting, so the session log has notes; `/start` to open a session.
+- First check of the session log: in a week, confirm `logs/sessions.jsonl` has rows (the
+  `SessionEnd` hook has only been dry-run) and that `/start` / `/end` are missing from the
+  skill list the model sees.
+- Next retro **2026-11-28** (`hooks/DUE`). Stop rule: fewer than half the sessions with an
+  `/end` note → drop `/end` or change how it's triggered.
 
 ## Next
 
@@ -265,6 +255,16 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   permission, suggest scope improvements, all work justifiable → `~/.claude/CLAUDE.md` § How we work (links
   `planning` → Calibrating depth instead of repeating it). One Haiku fresh-eyes review pass per lane or own
   commit → `review-gates` Gate 1 step 5 + `delegate` table; the "No Haiku for review" rule now excepts it.
+- 2026-10-29 · Retro (pruning, Sarah agreed): keep only rules with evidence of use or a caught
+  problem. `CLAUDE.md` ~1,030 → ~680 tokens (duplicates of skills, hooks and skill descriptions cut;
+  Say/ask, Verify, worktree bullets merged; ffmpeg → ai-deep-dive Lessons). Cut: Haiku fresh-eyes
+  pass (0 runs), `planning` (0 loads in 60 days; its stakes calibration → `working-model`),
+  `expert-review-panel` (1 load), `claude-md-management` (0 loads; `/end` replaces it), Keep /
+  Clarify / Cut review (1 session's use; never committed). `research-round` enabled per project.
+  Added `/start`, `/end`, `session-log` (SessionEnd) and `due.py` (replaces `hook-review` +
+  `REVIEW_DUE`); session notes are central (`logs/sessions.jsonl`), not per project, so the hook
+  writes the facts even when `/end` is skipped. Always-loaded ours ~5.1k → ~3.8k. Backups:
+  `backups/removed-2026-10-29/`, `backups/settings.json.2026-10-29-pre-prune`.
 
 ## Lessons
 
@@ -318,3 +318,9 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - Two retracted claims in one session (wibey-case 2026-10-13: "27× builder time", "11% with no
   change to spend") cost extra rounds; each failed on an unstated assumption. Now a CLAUDE.md
   rule; a project check script catches the mechanical slips (split tables, mixed terms).
+- Usage evidence beat argument in the pruning retro: skill-load counts and rule citations from
+  transcripts showed `planning` and `expert-review-panel` unused, while "Argue before recommending"
+  (uncommitted but live for two weeks) was used in 4 projects. Uncommitted `~/.claude` edits are live
+  rules: commit or drop them at the next retro.
+- Helper costs before vs after a rule can't be compared yet (n = 5 and 3 after 10-07, tasks differ).
+  The session log is what makes the next comparison possible.
