@@ -5,19 +5,16 @@ A project's own `CLAUDE.md` wins where it is more specific.
 ## How we work
 
 - **Plan, then wait.** Before changing files: a plan table
-  (`| Step | Files | Technique | Notes |`) plus open questions. Execute after Sarah confirms.
-- Say what you're thinking and why. Don't assume — ask when a decision is Sarah's.
-- **Verify before claiming.** Check current behaviour (build, run, read) before describing it.
-- **Argue before recommending.** Before proposing a claim or a number, state what would refute it
-  and what its arithmetic assumes.
+  (`| Step | Files | Technique | Notes |`) plus open questions, and what you think and why.
+  Execute after Sarah confirms.
+- **Verify, then argue.** Check current behaviour (build, run, read) before describing it. Before
+  proposing a claim or a number, state what would refute it and what its arithmetic assumes.
 - **Terse.** Tables, diffs, short bullets.
 - **Hyperlink doc references.** Every mention of another doc, in files and in replies, is a
   Markdown link (to the section anchor when there is one). Never a bare ID: write the name first,
   the ID in parentheses, linked to its definition, e.g. [Repeated context (C2)](…#context).
-- **YAGNI, sized to the project.** Place each project between "quick and dirty" and "production grade"
-  (`planning` → Calibrating depth) and build only what that level and a named current need justify. Every
-  piece of work must be justifiable. Never expand scope without permission; do suggest scope improvements
-  when they make sense.
+- **YAGNI.** Build only what the project's size and stakes (`working-model`) and a named current
+  need justify. Suggest scope changes; never make them unasked.
 
 ## State
 
@@ -37,42 +34,22 @@ A project's own `CLAUDE.md` wins where it is more specific.
 3. A step in a skill.
 4. A line in a `CLAUDE.md`.
 
-End of session: sort each new lesson. Project-specific → that project's Lessons.
-Applies anywhere → this file or a skill in `~/.claude/skills/`. Prefer the highest rung
-that fits.
+Project-specific → that project's Lessons; applies anywhere → this file or a skill. `/end` sorts them.
 
 ## Subagents
 
 - Default is inline. Load the `delegate` skill before any Agent call that starts an
-  implementation or review helper — it decides inline vs helper, sizes the lane and
-  gives the brief template.
-- Cost ≈ context size × steps. Small briefs, few steps, filtered output.
-- Models: `CLAUDE_CODE_SUBAGENT_MODEL=sonnet` is the default. Pass `model` explicitly
-  anyway; `haiku` only for mechanical edits with no judgment.
-- Never two sessions editing one working tree. Helpers work in their own worktree.
-- Sarah has uncommitted edits → make every edit in a separate worktree from the start
-  (`git worktree add --detach <scratch> HEAD`), then cherry-pick. An edit left in her tree
-  can end up in her next commit.
+  implementation or review helper.
+- Never two sessions editing one working tree: helpers work in their own worktree, and while Sarah
+  has uncommitted edits so do you (`git worktree add --detach <scratch> HEAD`, then cherry-pick).
 
 ## Gates
 
 - Every project exposes a fast check for iterating and a full check before commit, each
   printing ~5 lines. Convention: `npm run gate:fast` / `npm run gate` (or the stack's
   equivalent). If a project lacks them, propose adding them before delegating.
-- No screenshots in helpers. Compare hashes or computed values; the visual call is Sarah's.
-
-## Websites
-
-- New site, header or theme toggle → the `web-kit` skill (`~/Documents/projects/web-kit`).
-  Design or brand review → the `design-review` skill.
-
-## Commits and reviews
-
-- `commit` and `review-gates` skills hold the defaults. A project skill
-  (`commit-workflow`, `review-workflow`) extends them with project checks and wins on conflict.
 
 ## Sharing and privacy
 
 - A force-push leaves old commits reachable on GitHub by SHA. To purge personal data from a
   new repo, delete and recreate it (`gh auth refresh -s delete_repo`), then check the old SHA 404s.
-- Build ffmpeg filter strings in Python, not zsh: `$5:c` in a zsh string is a modifier.

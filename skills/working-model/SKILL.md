@@ -1,6 +1,6 @@
 ---
 name: working-model
-description: Right-size the working model — the doc surface, oversight cadence, scope unit, and decision-capture style — to a project's current size and phase, and re-tune it as the project scales. Use at session startup to classify the project; before creating any new .md file; at a stage or milestone boundary to run the audit; and whenever the user says "restructure the docs", "too many files", "this is over-documented", "the codebase grew too fast", "this milestone feels big", "split this", "merge these docs", or asks how much to review versus let the agent execute. Guards against .md sprawl, sudden codebase growth, untracked decisions, and mis-sized scope.
+description: Right-size the working model — the doc surface, oversight cadence, scope unit, and decision-capture style — to a project's current size, phase and stakes, and re-tune it as the project scales. Use when planning a new project or feature; before creating any new .md file; at a stage or milestone boundary to run the audit; and whenever the user says "restructure the docs", "too many files", "this is over-documented", "the codebase grew too fast", "this milestone feels big", "split this", "merge these docs", or asks how much to review versus let the agent execute. Guards against .md sprawl, sudden codebase growth, untracked decisions, and mis-sized scope.
 ---
 
 # Working model
@@ -45,6 +45,17 @@ Crossing a boundary is itself a trigger (see the trigger list).
 
 Most projects are "growing". The common mistake is applying the growing (or
 large) row's doc instincts to a small / short-cycle project.
+
+## Stakes
+
+Separate from size: how much rigour the plan gets. If unsure, ask once.
+
+- **Quick** — a script, a prototype, one feature on a known codebase: plan in a short conversation.
+- **Standard** — a new app, a nontrivial feature, anything shared with others: a full plan with
+  blind spots checked.
+- **High-stakes** — money, auth, PII, health data, customer-facing, or "the real thing": extra rigour
+  on security, the data model and risks; name open risks in `CLAUDE.md` rather than picking
+  silent defaults.
 
 ## Concision & simplicity — the default posture
 
