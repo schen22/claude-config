@@ -111,6 +111,10 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
   GitHub access from Cowork), run one small round, confirm skills + agents load and whether
   the workflow runs, else the skill fallback.
 - **hookify:** only if many simple text rules are wanted.
+- **research-round: digest mode** (from wibey-case, 2026-10-12): when a round challenges an
+  existing strategy, output a decision digest against it (keep / change / cut, plain words)
+  instead of a standalone proposal; 0.5.3's "proposal must stand alone" produced a 10,000-word
+  rival doc Sarah couldn't parse.
 
 ## Done
 
@@ -222,6 +226,8 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`. Backups: `backups/`.
 - 2026-10-10 · Never a bare ID in docs or replies: name first, ID in parentheses, linked (Sarah,
   wibey-case). Added to `~/.claude/CLAUDE.md` § How we work and research-round 0.5.2 (report
   rule 6, checklist 3, synthesizer).
+- 2026-10-12 · Hook review pushed from 2026-10-05 to 2026-10-15 (`hooks/REVIEW_DUE`), after the
+  wibey-case deadline Wed 2026-10-14 (Sarah). Then: enforce / adjust / remove each hook.
 - 2026-10-13 · From wibey-case: "Argue before recommending" added to `~/.claude/CLAUDE.md` §
   How we work; block-level Keep / Clarify / Cut review added to `review-gates` (Sarah).
 - 2026-10-20 · Hook review (158 decisions, 2026-09-28 → 10-12): `helper-guard` switched to enforce
