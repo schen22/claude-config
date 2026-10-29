@@ -324,3 +324,4 @@ Logs: `logs/hooks.jsonl`, `logs/agents.jsonl`, `logs/sessions.jsonl` (local only
   rules: commit or drop them at the next retro.
 - Helper costs before vs after a rule can't be compared yet (n = 5 and 3 after 10-07, tasks differ).
   The session log is what makes the next comparison possible.
+- A script that rewrote `settings.json` with `ensure_ascii=False` re-escaped every `\u2014`, adding 9 noise lines to the diff (2026-10-29). Keep Python's default `ensure_ascii` and read the diff before committing.
