@@ -1,0 +1,15 @@
+#!/bin/sh
+# Global pre-commit (git config --global core.hooksPath ~/.claude/git-hooks).
+# Blocks secrets in staged changes in every repo, then runs the repo's own pre-commit, if any.
+# Bypass (Sarah only): git commit --no-verify
+if command -v gitleaks >/dev/null 2>&1; then
+  if ! gitleaks git --pre-commit --staged --redact --no-banner --log-level error; then
+    echo "pre-commit: gitleaks found a secret in the staged changes (above). Commit blocked." >&2
+    exit 1
+  fi
+else
+  echo "pre-commit: gitleaks not installed (brew install gitleaks); secret scan skipped." >&2
+fi
+repo_hook="$(git rev-parse --git-common-dir)/hooks/pre-commit"
+[ -x "$repo_hook" ] && exec "$repo_hook" "$@"
+exit 0

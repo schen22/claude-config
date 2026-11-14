@@ -1,0 +1,100 @@
+#!/usr/bin/env python3
+"""Global pre-push: before anything reaches a PUBLIC GitHub repo, block private terms and secrets.
+
+Private repos are skipped. Visibility comes from `gh` and is cached for a day per repo; if it
+can't be found, the push is checked anyway. Terms: ~/.claude/scripts/private-terms.txt (one regex
+per line). Then runs the repo's own pre-push, if any. Bypass (Sarah only): git push --no-verify
+Test override: PRIVACY_VISIBILITY=public|private skips the gh lookup.
+"""
+import json, os, re, subprocess, sys, time
+
+ZERO = '0' * 40
+TERMS = os.path.expanduser('~/.claude/scripts/private-terms.txt')
+CACHE = os.path.expanduser('~/.cache/git-visibility.json')
+
+
+def run(*args, **kw):
+    return subprocess.run(args, capture_output=True, text=True, **kw)
+
+
+def slug(url):
+    m = re.search(r'github\.com[:/]([^/]+/[^/]+?)(?:\.git)?/?$', url)
+    return m and m.group(1)
+
+
+def visibility(url):
+    if os.environ.get('PRIVACY_VISIBILITY'):
+        return os.environ['PRIVACY_VISIBILITY']
+    repo = slug(url)
+    if not repo:
+        return 'private'  # not GitHub (a local bare repo, another host)
+    try:
+        cache = json.load(open(CACHE))
+    except (OSError, ValueError):
+        cache = {}
+    hit = cache.get(repo)
+    if hit and time.time() - hit['at'] < 86400:
+        return hit['v']
+    r = run('gh', 'api', f'repos/{repo}', '--jq', '.private')
+    if r.returncode:
+        return 'unknown'  # new or unreachable repo: check anyway
+    v = 'private' if r.stdout.strip() == 'true' else 'public'
+    cache[repo] = {'v': v, 'at': time.time()}
+    os.makedirs(os.path.dirname(CACHE), exist_ok=True)
+    json.dump(cache, open(CACHE, 'w'))
+    return v
+
+
+def ranges(remote, lines):
+    for line in lines.splitlines():
+        _, local, _, remote_sha = line.split()
+        if local == ZERO:
+            continue  # branch deletion
+        yield f'{remote_sha}..{local}' if remote_sha != ZERO else f'{local} --not --remotes={remote}'
+
+
+def term_hits(rng, deny):
+    out = run('git', 'log', '-p', '--no-color', '--format=@@commit %h', *rng.split()).stdout
+    hits, commit, path = [], '', ''
+    for line in out.splitlines():
+        if line.startswith('@@commit '):
+            commit = line[9:]
+        elif line.startswith('+++ b/'):
+            path = line[6:]
+        elif line.startswith('+') and not line.startswith('+++') and deny.search(line):
+            hits.append(f'{commit} {path}: {line[1:].strip()[:100]}')
+    return hits
+
+
+def main():
+    remote, url = sys.argv[1], sys.argv[2]
+    lines = sys.stdin.read()
+    vis = visibility(url)
+    if vis != 'private':
+        terms = [t for t in open(TERMS).read().splitlines() if t.strip() and not t.startswith('#')]
+        deny = re.compile('|'.join(terms), re.I)
+        blocked = False
+        for rng in ranges(remote, lines):
+            hits = term_hits(rng, deny)
+            if hits:
+                blocked = True
+                print(f'pre-push: private terms in commits for a {vis} repo:', *hits[:20], sep='\n  ', file=sys.stderr)
+            g = run('gitleaks', 'git', '--redact', '--no-banner', '--log-level', 'error', f'--log-opts={rng}')
+            if g.returncode:
+                blocked = True
+                print(f'pre-push: gitleaks found secrets:\n{g.stdout}{g.stderr}', file=sys.stderr)
+        if blocked:
+            print('Push blocked. Remove them (rewrite the commits) or push to a private repo.', file=sys.stderr)
+            return 1
+    hook = os.path.join(run('git', 'rev-parse', '--git-common-dir').stdout.strip(), 'hooks', 'pre-push')
+    if os.access(hook, os.X_OK):
+        return subprocess.run([hook, *sys.argv[1:]], input=lines, text=True).returncode
+    return 0
+
+
+if __name__ == '__main__':
+    try:
+        sys.exit(main())
+    except FileNotFoundError as e:  # gitleaks or the terms file missing
+        print(f'pre-push: {e}; privacy check incomplete, push blocked.', file=sys.stderr)
+        sys.exit(1)

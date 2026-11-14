@@ -32,6 +32,19 @@ def sanitize_settings(raw):
     return (json.dumps(s, indent=2, ensure_ascii=False) + '\n').encode()
 
 
+def readme_gaps(files, readme):
+    """What the README's "What's here" misses, or lists that no longer exists."""
+    have = {f.split('/')[1] for f in files if f.startswith('skills/') and f.count('/') == 2}
+    have |= {os.path.basename(f)[:-3] for f in files if re.match(r'hooks/(?!hooklib|test_)\w+\.py$', f)}
+    have |= {f.split('/')[1] for f in files if f.startswith('marketplace/') and f.count('/') >= 2}
+    have |= {os.path.basename(f) for f in files if re.match(r'git-hooks/pre-\w+$', f)}
+    missing = sorted(n for n in have if f'`{n}`' not in readme and f'{n}/' not in readme)
+    row = next((l for l in readme.splitlines() if l.startswith('| [`skills/`]')), '')
+    listed = set(re.findall(r'`([\w-]+)`', row.split('|')[2] if row.count('|') > 2 else ''))
+    stale = sorted(n for n in listed if f'skills/{n}/SKILL.md' not in files)
+    return [f'README misses `{n}`' for n in missing] + [f'README lists removed skill `{n}`' for n in stale]
+
+
 def main():
     terms = [t for t in git('show', f'HEAD:{TERMS}').decode().splitlines() if t.strip() and not t.startswith('#')]
     deny = re.compile('|'.join(terms), re.I)
@@ -49,8 +62,9 @@ def main():
             if deny.search(line):
                 hits.append(f'{f}:{n}: {line.strip()[:120]}')
         out[f] = data
+    hits += readme_gaps(files, out.get('README.md', b'').decode())
     if hits:
-        print('BLOCKED — private terms found (nothing written):', *hits, sep='\n  ')
+        print('BLOCKED — private terms or README gaps found (nothing written):', *hits, sep='\n  ')
         return 1
     if not os.path.isdir(os.path.join(DEST, '.git')):
         print(f'BLOCKED — {DEST} is not a git clone of the public repo')

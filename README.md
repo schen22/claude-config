@@ -30,12 +30,15 @@ The rules behind it are in [`CLAUDE.md`](CLAUDE.md).
 | [`skills/`](skills/) | `start`, `end`, `delegate`, `review-gates`, `review`, `commit`, `retro`, `working-model`, `design-review`, `web-kit` |
 | [`hooks/`](hooks/) | `helper-guard` (helper budget, no raw test runs), `usage-ledger` (cost per helper), `session-log` (one row per session), `due` (reminds when a retro is due). Tests: `python3 hooks/test_hooks.py` |
 | [`marketplace/research-round/`](marketplace/research-round/README.md) | Plugin: `/research-round <question>` runs up to 3 role agents in parallel, then fact-checkers, an overseer and a synthesis |
+| [`git-hooks/`](git-hooks/) | Global git hooks for every repo (`core.hooksPath`): `pre-commit` blocks secrets (gitleaks); `pre-push` blocks private terms and secrets in pushes to **public** repos. Tests: `python3 git-hooks/test_git_hooks.py` |
 | [`settings.json`](settings.json) | Hook wiring and subagent model |
 
 ## Use it
 
 - **Plugin:** `/plugin marketplace add schen22/claude-config`, then
   `/plugin install research-round@sarah-config`.
+- **Git hooks:** `git config --global core.hooksPath ~/.claude/git-hooks` (needs `gitleaks`;
+  `pre-push` reads its terms from `~/.claude/scripts/private-terms.txt`, one regex per line).
 - **Skills and hooks:** copy the folders you want into `~/.claude/` and merge the `hooks` block
   from `settings.json`. The skills mention me ("Sarah") by name; change that to your own name.
 
@@ -44,4 +47,7 @@ The rules behind it are in [`CLAUDE.md`](CLAUDE.md).
 `~/.claude` is a private repo. Its runtime state (transcripts, history, logs) is never committed.
 [`scripts/export_public.py`](scripts/export_public.py) copies the committed setup here, without
 `PLAN.md` (my private decision log) and without local-only settings. It refuses to export if it
-finds private terms.
+finds private terms, or if this README misses a skill, hook or plugin.
+
+To change anything, edit `~/.claude` and run the export; edits made directly in this repo are
+overwritten by the next export.
