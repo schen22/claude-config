@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet"
+  },
+  "enabledPlugins": {
+    "claude-md-management@claude-plugins-official": false,
+    "session-report@claude-plugins-official": true,
+    "research-round@sarah-config": false
+  },
+  "extraKnownMarketplaces": {
+    "sarah-config": {
+      "source": {
+        "source": "github",
+        "repo": "schen22/claude-config"
+      }
+    }
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Read|Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CLAUDE_HOOK_MODE=enforce python3 -S ~/.claude/hooks/helper-guard.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -S ~/.claude/hooks/usage-ledger.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -S ~/.claude/hooks/due.py --session-start",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -S ~/.claude/hooks/session-log.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
