@@ -11,8 +11,9 @@ commit and push there.
 """
 import json, os, re, shutil, subprocess, sys, tempfile
 
-SRC = os.path.expanduser('~/.claude')
-DEST = os.path.expanduser(sys.argv[1] if len(sys.argv) > 1 else '~/Documents/projects/claude-config-public')
+SRC = os.path.expanduser(os.environ.get('CLAUDE_CONFIG_SRC', '~/.claude'))
+DEST = os.path.expanduser(sys.argv[1] if len(sys.argv) > 1 else
+                          os.environ.get('CLAUDE_CONFIG_PUBLIC', '~/Documents/projects/claude-config-public'))
 TERMS = 'scripts/private-terms.txt'  # one regex per line; private, never exported
 PRIVATE = {'PLAN.md', TERMS}
 SETTINGS_DROP = {'autoMode', 'feedbackSurveyState', 'permissions'}

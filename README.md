@@ -30,7 +30,7 @@ The rules behind it are in [`CLAUDE.md`](CLAUDE.md).
 | [`skills/`](skills/) | `start`, `end`, `delegate`, `review-gates`, `review`, `commit`, `retro`, `working-model`, `design-review`, `web-kit` |
 | [`hooks/`](hooks/) | `helper-guard` (helper budget, no raw test runs), `usage-ledger` (cost per helper), `session-log` (one row per session), `due` (reminds when a retro is due). Tests: `python3 hooks/test_hooks.py` |
 | [`marketplace/research-round/`](marketplace/research-round/README.md) | Plugin: `/research-round <question>` runs up to 3 role agents in parallel, then fact-checkers, an overseer and a synthesis |
-| [`git-hooks/`](git-hooks/) | Global git hooks for every repo (`core.hooksPath`): `pre-commit` blocks secrets (gitleaks); `pre-push` blocks private terms and secrets in pushes to **public** repos. Tests: `python3 git-hooks/test_git_hooks.py` |
+| [`git-hooks/`](git-hooks/) | Global git hooks for every repo (`core.hooksPath`): `pre-commit` blocks secrets (gitleaks); `pre-push` blocks private terms and secrets (diffs and commit messages) in pushes to **public** repos, and publishes this repo when `~/.claude` is pushed. Tests: `python3 git-hooks/test_git_hooks.py` |
 | [`settings.json`](settings.json) | Hook wiring and subagent model |
 
 ## Use it
@@ -49,5 +49,7 @@ The rules behind it are in [`CLAUDE.md`](CLAUDE.md).
 `PLAN.md` (my private decision log) and without local-only settings. It refuses to export if it
 finds private terms, or if this README misses a skill, hook or plugin.
 
-To change anything, edit `~/.claude` and run the export; edits made directly in this repo are
-overwritten by the next export.
+Pushing `~/.claude` publishes this repo automatically: the global `pre-push` runs the export,
+commits any change here (the message lists files only) and pushes it. If the export or that push
+fails, the private push is blocked too, so the two never drift. To change anything, edit
+`~/.claude`; edits made directly in this repo are overwritten by the next export.

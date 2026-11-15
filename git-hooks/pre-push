@@ -10,6 +10,8 @@ import json, os, re, subprocess, sys, time
 
 ZERO = '0' * 40
 TERMS = os.path.expanduser('~/.claude/scripts/private-terms.txt')
+CONFIG = os.path.realpath(os.path.expanduser(os.environ.get('CLAUDE_CONFIG_SRC', '~/.claude')))
+PUBLISH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'publish_public.py')
 CACHE = os.path.expanduser('~/.cache/git-visibility.json')
 
 
@@ -54,8 +56,12 @@ def ranges(remote, lines):
 
 
 def term_hits(rng, deny):
+    hits = []
+    for entry in run('git', 'log', '--format=%h%x00%B%x01', *rng.split()).stdout.split('\x01'):
+        sha, _, msg = entry.strip().partition('\x00')
+        hits += [f'{sha} (commit message): {l.strip()[:100]}' for l in msg.splitlines() if deny.search(l)]
     out = run('git', 'log', '-p', '--no-color', '--format=@@commit %h', *rng.split()).stdout
-    hits, commit, path = [], '', ''
+    commit, path = '', ''
     for line in out.splitlines():
         if line.startswith('@@commit '):
             commit = line[9:]
@@ -69,6 +75,12 @@ def term_hits(rng, deny):
 def main():
     remote, url = sys.argv[1], sys.argv[2]
     lines = sys.stdin.read()
+    top = os.path.realpath(run('git', 'rev-parse', '--show-toplevel').stdout.strip())
+    if top == CONFIG and any(l.split()[2] == 'refs/heads/main' for l in lines.splitlines() if l.strip()):
+        if subprocess.run([sys.executable, PUBLISH]).returncode:
+            print('pre-push: claude-config was not published, so this push is blocked too (keeps both in sync).',
+                  file=sys.stderr)
+            return 1
     vis = visibility(url)
     if vis != 'private':
         terms = [t for t in open(TERMS).read().splitlines() if t.strip() and not t.startswith('#')]
