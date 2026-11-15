@@ -53,3 +53,7 @@ Pushing `~/.claude` publishes this repo automatically: the global `pre-push` run
 commits any change here (the message lists files only) and pushes it. If the export or that push
 fails, the private push is blocked too, so the two never drift. To change anything, edit
 `~/.claude`; edits made directly in this repo are overwritten by the next export.
+
+## License
+
+[MIT](LICENSE).
