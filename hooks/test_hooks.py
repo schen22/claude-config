@@ -17,6 +17,13 @@ CASES = [
     ('helper single test', 'helper-guard', {'agent_id': 'x', 'cwd': os.path.expanduser('~/Documents/projects/sarahs-corner'), 'tool_name': 'Bash', 'tool_input': {'command': 'node --test --test-name-pattern "toggle" test/interaction.test.js'}}, False),
     ('helper gate', 'helper-guard', {'agent_id': 'x', 'cwd': os.path.expanduser('~/Documents/projects/sarahs-corner'), 'tool_name': 'Bash', 'tool_input': {'command': 'npm run gate:fast'}}, False),
     ('helper screenshot', 'helper-guard', {'agent_id': 'x', 'tool_name': 'Read', 'tool_input': {'file_path': '/tmp/shot.png'}}, True),
+    ('commit --no-verify', 'no-verify-guard', {'tool_name': 'Bash', 'tool_input': {'command': 'git add . && git commit --no-verify -m x'}}, True),
+    ('commit -nm', 'no-verify-guard', {'tool_name': 'Bash', 'tool_input': {'command': 'git commit -nm "x"'}}, True),
+    ('push --no-verify', 'no-verify-guard', {'agent_id': 'x', 'tool_name': 'Bash', 'tool_input': {'command': 'git push --no-verify origin b'}}, True),
+    ('-c core.hooksPath', 'no-verify-guard', {'tool_name': 'Bash', 'tool_input': {'command': 'git -c core.hooksPath=/dev/null commit -m x'}}, True),
+    ('message mentions -n', 'no-verify-guard', {'tool_name': 'Bash', 'tool_input': {'command': 'git commit -m "add -n and --no-verify guard"'}}, False),
+    ('push -n is dry run', 'no-verify-guard', {'tool_name': 'Bash', 'tool_input': {'command': 'git push -n origin b'}}, False),
+    ('plain commit', 'no-verify-guard', {'tool_name': 'Bash', 'tool_input': {'command': 'git commit -m x'}}, False),
 ]
 
 # Replay the real 202k lane H transcript, if it is still on disk.
@@ -81,6 +88,14 @@ ok = 'Retro due' in out and 'Hook review' not in out
 CASES.append(('retro due, hook review silent', 'due', {}, None))
 fails += not ok
 print(f"{'ok  ' if ok else 'FAIL'} {'due':13} retro due, hook review silent" + ('' if ok else f'  {out!r}'))
+
+# settings.json keeps json.dumps' default form (ASCII escapes, indent 2): a rewrite with
+# ensure_ascii=False re-escaped every — into diff noise (2026-10-29, again 2026-11-16).
+raw = open(os.path.join(HERE, '..', 'settings.json')).read()
+ok = raw == json.dumps(json.loads(raw), indent=2) + '\n'
+CASES.append(('settings.json canonical', 'settings', {}, None))
+fails += not ok
+print(f"{'ok  ' if ok else 'FAIL'} {'settings':13} settings.json canonical" + ('' if ok else '  rewrite with json.dumps(s, indent=2)'))
 
 print(f'\n{len(CASES) - fails}/{len(CASES)} passed')
 sys.exit(1 if fails else 0)

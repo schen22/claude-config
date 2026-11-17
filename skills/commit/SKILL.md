@@ -19,6 +19,9 @@ description: >-
   `git worktree remove <path>` and `git branch -d lane/<name>` (plus any
   `worktree-agent-*` branch). A leftover lane is easy to mistake for unfinished work.
 - `git log --oneline -5` before the first commit — never assume repo state.
+- `git remote -v` before any push advice. No remote → say so; never "push when happy".
+- Before any push: `git fetch`; if the remote branch moved, `ListAgents` (who else pushes here?),
+  then merge it in. Never force-push a shared branch.
 - Before staging: `git status` and `ListAgents`. If a peer session is busy in the same
   working tree (files change under you), stop and ask Sarah: wait for it to commit, or
   move it to its own worktree. Never commit around its half-done edits.
